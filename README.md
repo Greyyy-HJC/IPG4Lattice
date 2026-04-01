@@ -49,6 +49,13 @@ The current implementation follows Appendix A of the paper on top of an already 
 The implementation uses the matrix product interpretation of Appendix A:
 `P^(1/T)` is taken from the `SU(3)` matrix `P = ∏_t u(t)`, not from a traced scalar Polyakov loop.
 
+Current numerical choices for the IPG step are:
+
+- The residual IPG construction is carried out in double precision (`numpy`/`scipy` complex128).
+- The Cabibbo-Marinari projection sweep stops at an internal tolerance of `1e-14`.
+- The `SU(3)` projection is required to satisfy a unitarity check at the `1e-10` level.
+- In practice the resulting IPG diagnostics are usually observed at around `1e-14` to `1e-13`, while the final ensemble quality is still limited by the precision of the input Coulomb-gauge fixing.
+
 ## IPG validation
 
 `scripts/validate_cg_ipg.py` performs definition-level validation rather than relying only on propagator plots. For each configuration it rebuilds the IPG transform from the original CG gauge and checks the written `CG+IPG` gauge against the Appendix A conditions.
@@ -66,6 +73,12 @@ The reported diagnostics are:
 - `logm_err`: numerical error reported by the matrix-logarithm step used to construct `P^(1/T)`.
 
 The default acceptance criteria are controlled by `--spread-tol`, `--boundary-tol`, and `--reconstruct-tol`.
+
+The current default validation tolerances are:
+
+- `--spread-tol = 1e-10`
+- `--boundary-tol = 1e-10`
+- `--reconstruct-tol = 1e-10`
 
 ## Quark propagator tests
 
