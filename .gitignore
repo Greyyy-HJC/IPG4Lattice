@@ -1,8 +1,10 @@
 .vscode/
+.codex/
 __pycache__/
 *.pyc
 
 ensemble/
+artifacts/plots/
 
 scripts/.cache/
 scripts/__pycache__/
