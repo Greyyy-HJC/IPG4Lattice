@@ -48,6 +48,10 @@ class IPGResult:
     transformed_spread: float
 
 
+def determinant_error(matrix: np.ndarray) -> float:
+    return float(abs(np.linalg.det(matrix) - 1.0))
+
+
 def ensure_pyquda_initialized(resource_path: Optional[Path] = None) -> Path:
     global _PYQUDA_INITIALIZED
     if resource_path is None:
@@ -168,6 +172,14 @@ def average_temporal_links(gauge_lexico: np.ndarray) -> np.ndarray:
     return gauge_lexico[3].mean(axis=(1, 2, 3))
 
 
+def projected_temporal_links(
+    gauge_lexico: np.ndarray,
+    projection_method: str = "cabibbo-marinari",
+) -> np.ndarray:
+    averaged = average_temporal_links(gauge_lexico)
+    return np.stack([project_to_su3(link, method=projection_method) for link in averaged], axis=0)
+
+
 def integrated_polyakov_matrix(projected_temporal_links: np.ndarray) -> np.ndarray:
     polyakov = np.eye(3, dtype=np.complex128)
     for link in projected_temporal_links:
@@ -215,7 +227,7 @@ def build_ipg_transform(
     projection_method: str = "cabibbo-marinari",
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, float, float]:
     averaged = average_temporal_links(gauge_lexico)
-    projected = np.stack([project_to_su3(link, method=projection_method) for link in averaged], axis=0)
+    projected = projected_temporal_links(gauge_lexico, projection_method=projection_method)
     polyakov = integrated_polyakov_matrix(projected)
     extent_t = gauge_lexico.shape[1]
     target, logm_error = matrix_t_root_su3(polyakov, extent_t, projection_method, projected_temporal_links=projected)
@@ -240,9 +252,34 @@ def projected_temporal_spread(
     gauge_lexico: np.ndarray,
     projection_method: str = "cabibbo-marinari",
 ) -> float:
-    averaged = average_temporal_links(gauge_lexico)
-    projected = np.stack([project_to_su3(link, method=projection_method) for link in averaged], axis=0)
+    projected = projected_temporal_links(gauge_lexico, projection_method=projection_method)
     return float(max(np.linalg.norm(link - projected[0]) for link in projected))
+
+
+def target_residual_error(projected_temporal_links: np.ndarray, transform: np.ndarray, target: np.ndarray) -> float:
+    extent_t = projected_temporal_links.shape[0]
+    return float(
+        max(
+            np.linalg.norm(transform[t] @ projected_temporal_links[t] @ transform[(t + 1) % extent_t].conj().T - target)
+            for t in range(extent_t)
+        )
+    )
+
+
+def target_deviation(projected_temporal_links: np.ndarray, target: np.ndarray) -> float:
+    return float(max(np.linalg.norm(link - target) for link in projected_temporal_links))
+
+
+def transform_unitarity_error(transform: np.ndarray) -> float:
+    return float(max(unitary_error(matrix) for matrix in transform))
+
+
+def transform_determinant_error(transform: np.ndarray) -> float:
+    return float(max(determinant_error(matrix) for matrix in transform))
+
+
+def gauge_max_abs_diff(lhs_lexico: np.ndarray, rhs_lexico: np.ndarray) -> float:
+    return float(np.max(np.abs(lhs_lexico - rhs_lexico)))
 
 
 def read_nersc_gauge(path: Path) -> LatticeGauge:
