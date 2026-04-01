@@ -61,10 +61,14 @@ def ensure_pyquda_initialized(resource_path: Optional[Path] = None) -> Path:
 
 
 def extract_cfg_index(path: Path) -> int:
+    dot_tokens = path.name.split(".")
+    for token in reversed(dot_tokens):
+        if token.isdigit():
+            return int(token)
     match = re.search(r"\.(\d+)$", path.name)
-    if match is None:
-        raise ValueError(f"Could not extract configuration index from {path}")
-    return int(match.group(1))
+    if match is not None:
+        return int(match.group(1))
+    raise ValueError(f"Could not extract configuration index from {path}")
 
 
 def list_gauge_files(
@@ -88,6 +92,9 @@ def list_gauge_files(
 def default_ipg_name(input_name: str) -> str:
     if ".cg." in input_name:
         return input_name.replace(".cg.", ".cg.ipg.", 1)
+    tolerance_suffix = re.search(r"(\.\d+e[+-]?\d+)$", input_name)
+    if tolerance_suffix is not None:
+        return f"{input_name[:tolerance_suffix.start()]}{'.ipg'}{tolerance_suffix.group(1)}"
     return f"{input_name}.ipg"
 
 
@@ -168,10 +175,38 @@ def integrated_polyakov_matrix(projected_temporal_links: np.ndarray) -> np.ndarr
     return normalize_to_su3(polyakov)
 
 
-def matrix_t_root_su3(polyakov: np.ndarray, extent_t: int, projection_method: str) -> Tuple[np.ndarray, float]:
+def _build_transform_from_target(projected_temporal_links: np.ndarray, target: np.ndarray) -> Tuple[np.ndarray, float]:
+    extent_t = projected_temporal_links.shape[0]
+    transform = np.empty((extent_t, 3, 3), dtype=np.complex128)
+    transform[0] = np.eye(3, dtype=np.complex128)
+    for t in range(extent_t - 1):
+        transform[t + 1] = target.conj().T @ transform[t] @ projected_temporal_links[t]
+    boundary = target.conj().T @ transform[-1] @ projected_temporal_links[-1]
+    boundary_error = float(np.linalg.norm(boundary - np.eye(3, dtype=np.complex128)))
+    return transform, boundary_error
+
+
+def matrix_t_root_su3(
+    polyakov: np.ndarray,
+    extent_t: int,
+    projection_method: str,
+    projected_temporal_links: Optional[np.ndarray] = None,
+) -> Tuple[np.ndarray, float]:
     log_polyakov, logm_error = logm(polyakov, disp=False)
     root = expm(log_polyakov / extent_t)
     root = project_to_su3(root, method=projection_method)
+    if projected_temporal_links is not None:
+        center_phases = (
+            np.exp(0j),
+            np.exp(2j * np.pi / 3),
+            np.exp(-2j * np.pi / 3),
+        )
+        candidates = []
+        for phase in center_phases:
+            candidate = phase * root
+            transform, boundary_error = _build_transform_from_target(projected_temporal_links, candidate)
+            candidates.append((boundary_error, candidate))
+        _, root = min(candidates, key=lambda item: item[0])
     return root, float(logm_error)
 
 
@@ -183,15 +218,8 @@ def build_ipg_transform(
     projected = np.stack([project_to_su3(link, method=projection_method) for link in averaged], axis=0)
     polyakov = integrated_polyakov_matrix(projected)
     extent_t = gauge_lexico.shape[1]
-    target, logm_error = matrix_t_root_su3(polyakov, extent_t, projection_method)
-
-    transform = np.empty((extent_t, 3, 3), dtype=np.complex128)
-    transform[0] = np.eye(3, dtype=np.complex128)
-    for t in range(extent_t - 1):
-        transform[t + 1] = target.conj().T @ transform[t] @ projected[t]
-
-    boundary = target.conj().T @ transform[-1] @ projected[-1]
-    boundary_error = float(np.linalg.norm(boundary - np.eye(3, dtype=np.complex128)))
+    target, logm_error = matrix_t_root_su3(polyakov, extent_t, projection_method, projected_temporal_links=projected)
+    transform, boundary_error = _build_transform_from_target(projected, target)
     return transform, averaged, projected, target, logm_error, boundary_error
 
 

@@ -46,7 +46,8 @@ def main() -> int:
 
     input_dir = args.input_dir.resolve()
     output_dir = args.output_dir.resolve()
-    transform_dir = output_dir.parent / "ipg_transform"
+    output_root = output_dir.parent if output_dir.name == "gauge" else output_dir
+    transform_dir = output_root / "ipg_transform"
 
     gauge_files = list_gauge_files(input_dir, args.glob, args.cfg_start, args.cfg_stop)
     if not gauge_files:

@@ -2,10 +2,7 @@
 __pycache__/
 *.pyc
 
-ensemble/S8T32_cg/*
-ensemble/S16T16/*
-ensemble/S16T16_cg/*
-ensemble/S16T16_cg_ipg/*
+ensemble/
 
 scripts/.cache/
 scripts/__pycache__/

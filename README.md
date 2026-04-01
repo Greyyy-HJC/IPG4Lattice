@@ -24,7 +24,7 @@ In practice, `PyQUDA` and CUDA/MPI compatibility are machine-dependent, so `envi
 - `scripts/ipg_utils.py`: shared IPG and validation helpers.
 - `scripts/ipg_fix.py`: batch CG -> CG+IPG fixing script.
 - `scripts/validate_cg_ipg.py`: CG vs CG+IPG propagator comparison.
-- `ensemble/`: local input and generated ensembles. Large ensemble contents are ignored by git.
+- `ensemble/`: local input and generated ensembles. The entire directory is ignored by git.
 
 ## What the code does
 
@@ -70,6 +70,7 @@ python scripts/validate_cg_ipg.py \
 - Input CG ensemble: `ensemble/S16T16_cg/gauge/wilson_b6.cg.*`
 - Output CG+IPG ensemble: `ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.*`
 - Saved residual transform: `ensemble/S16T16_cg_ipg/ipg_transform/*.npy`
+- The intended output layout is an output root containing sibling `gauge/` and `ipg_transform/` directories.
 
 Generated ensemble files are intentionally ignored by git.
 

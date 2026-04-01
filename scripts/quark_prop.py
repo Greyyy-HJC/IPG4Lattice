@@ -36,12 +36,13 @@ dirac = core.getClover(latt_info, mass, 1e-8, 10000, xi_0, csw_r, csw_t, multigr
 I = gamma.gamma(0)
 
 # Lists to store correlation functions
-wall_quark_corr = []
-point_quark_corr = []
+point_quark_corr_z = []
+point_quark_corr_t = []
 
 for cfg in tqdm(range(N_conf), desc="Processing configurations"):
-    gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
     # gauge = io.readNERSCGauge(f"../ensemble/S16T16/wilson_b6.{cfg}")
+    # gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
+    gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
     
     # Apply smearing to gauge field
     # gauge.stoutSmear(1, 0.125, 4)
@@ -51,37 +52,56 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations"):
         # Point source propagator
         point_source = source.propagator(latt_info, "point", [0, 0, 0, 0])
         point_propag = core.invertPropagator(dirac, point_source)
-        
-        # Contract to get correlation function
-        point_quark_corr.append(
-            core.gatherLattice(
-                core.lexico(contract("wtzyxijaa,ji->wtzyx", point_propag.data, I).real.get(), [0,1,2,3,4]), 
-                [0, 1, 2, 3]
-            )[0, 0, :, 0]
+
+        # Gather the point-source correlator in [t, z, y, x] order.
+        point_quark_corr_4d = core.gatherLattice(
+            core.lexico(contract("wtzyxijaa,ji->wtzyx", point_propag.data, I).real.get(), [0, 1, 2, 3, 4]),
+            [0, 1, 2, 3],
         )
+
+        point_quark_corr_z.append(point_quark_corr_4d[0, :, 0, 0])
+        point_quark_corr_t.append(point_quark_corr_4d[:, 0, 0, 0])
 
 # Clean up resources
 # dirac.destroy()
 
-print("\n>>> shape of point_quark_corr: ", point_quark_corr[0].shape)
+print("\n>>> shape of point_quark_corr_z: ", point_quark_corr_z[0].shape)
+print(">>> shape of point_quark_corr_t: ", point_quark_corr_t[0].shape)
 
 # Print first few entries of the correlation functions
-print("Point source, conf 0: ", point_quark_corr[0][:6])
+print("Point source z, conf 0: ", point_quark_corr_z[0][:6])
+print("Point source t, conf 0: ", point_quark_corr_t[0][:6])
 
 # %%
-print("shape of point_quark_corr: ", np.shape(point_quark_corr))
+print("shape of point_quark_corr_z: ", np.shape(point_quark_corr_z))
+print("shape of point_quark_corr_t: ", np.shape(point_quark_corr_t))
 
-point_quark_corr_jk = jackknife(point_quark_corr)
-point_quark_corr_jk_avg = jk_ls_avg(point_quark_corr_jk)
-point_meff = pt2_to_meff(point_quark_corr_jk_avg, boundary="none")
+point_quark_corr_z_jk = jackknife(point_quark_corr_z)
+point_quark_corr_z_jk_avg = jk_ls_avg(point_quark_corr_z_jk)
+point_meff_z = pt2_to_meff(point_quark_corr_z_jk_avg, boundary="none")
+
+point_quark_corr_t_jk = jackknife(point_quark_corr_t)
+point_quark_corr_t_jk_avg = jk_ls_avg(point_quark_corr_t_jk)
+point_meff_t = pt2_to_meff(point_quark_corr_t_jk_avg, boundary="none")
 
 fig, ax = default_plot()
-ax.errorbar(np.arange(len(point_meff)), gv.mean(point_meff), yerr=gv.sdev(point_meff), label="point", **errorb)
+ax.errorbar(
+    np.arange(len(point_meff_z)),
+    gv.mean(point_meff_z),
+    yerr=gv.sdev(point_meff_z),
+    label="point-z",
+    **errorb,
+)
+ax.errorbar(
+    np.arange(len(point_meff_t)),
+    gv.mean(point_meff_t),
+    yerr=gv.sdev(point_meff_t),
+    label="point-t",
+    **errorb,
+)
 ax.legend(ncol=2, **fs_small_p)
-ax.set_xlabel(r"$t_{\mathrm{sep}}$", **fs_p)
+ax.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
 ax.set_ylabel(r"$m_{\mathrm{eff}}$", **fs_p)
 plt.tight_layout()
 plt.show()
 # %%
-
-
