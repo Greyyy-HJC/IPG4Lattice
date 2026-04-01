@@ -19,6 +19,10 @@ if not os.path.exists(".cache"):
     os.makedirs(".cache")
     print("Created .cache directory for PyQUDA resources")
 
+
+ensemble = "S16T16_cg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg"
+
+
 init([1, 1, 1, 1], resource_path=".cache")
 N_conf = 50  # Number of configurations to process
 
@@ -29,41 +33,55 @@ csw_r = 1.02868
 csw_t = 1.02868
 multigrid = None # [[4, 4, 4, 4], [2, 2, 2, 8]]
 
-latt_info = core.LatticeInfo([16, 16, 16, 16], -1, xi_0 / nu)
+latt_size = [16, 16, 16, 16]
+latt_info = core.LatticeInfo(latt_size, -1, xi_0 / nu)
 dirac = core.getClover(latt_info, mass, 1e-8, 10000, xi_0, csw_r, csw_t, multigrid)
 
 # Get gamma5 matrix
 I = gamma.gamma(0)
+
+x_src_positions = [(i * latt_size[0]) // 4 for i in range(4)]
+y_src_positions = [(i * latt_size[1]) // 4 for i in range(4)]
+source_positions = [[x, y, 0, 0] for x in x_src_positions for y in y_src_positions]
+print("Averaging over source positions:", source_positions)
 
 # Lists to store correlation functions
 point_quark_corr_z = []
 point_quark_corr_t = []
 
 for cfg in tqdm(range(N_conf), desc="Processing configurations"):
-    # gauge = io.readNERSCGauge(f"../ensemble/S16T16/wilson_b6.{cfg}")
-    # gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
-    gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+    
+    if ensemble == "S16T16":
+        gauge = io.readNERSCGauge(f"../ensemble/S16T16/wilson_b6.{cfg}")
+    elif ensemble == "S16T16_cg":
+        gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
+    elif ensemble == "S16T16_cg_ipg":
+        gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
     
     # Apply smearing to gauge field
     # gauge.stoutSmear(1, 0.125, 4)
     # dirac.loadGauge(gauge)
     with dirac.useGauge(gauge):
-    
-        # Point source propagator
-        point_source = source.propagator(latt_info, "point", [0, 0, 0, 0])
-        point_propag = core.invertPropagator(dirac, point_source)
+        cfg_point_quark_corr_z = []
+        cfg_point_quark_corr_t = []
 
-        # Gather the point-source correlator in [t, z, y, x] order.
-        point_quark_corr_4d = core.gatherLattice(
-            core.lexico(contract("wtzyxijaa,ji->wtzyx", point_propag.data, I).real.get(), [0, 1, 2, 3, 4]),
-            [0, 1, 2, 3],
-        )
+        for src_position in source_positions:
+            src_x, src_y, src_z, src_t = src_position
+            point_source = source.propagator(latt_info, "point", src_position)
+            point_propag = core.invertPropagator(dirac, point_source)
 
-        point_quark_corr_z.append(point_quark_corr_4d[0, :, 0, 0])
-        point_quark_corr_t.append(point_quark_corr_4d[:, 0, 0, 0])
+            # Gather the point-source correlator in [t, z, y, x] order.
+            point_quark_corr_4d = core.gatherLattice(
+                core.lexico(contract("wtzyxijaa,ji->wtzyx", point_propag.data, I).real.get(), [0, 1, 2, 3, 4]),
+                [0, 1, 2, 3],
+            )
 
-# Clean up resources
-# dirac.destroy()
+            cfg_point_quark_corr_z.append(point_quark_corr_4d[src_t, :, src_y, src_x]) # t z y x
+            cfg_point_quark_corr_t.append(point_quark_corr_4d[:, src_z, src_y, src_x])
+
+        point_quark_corr_z.append(np.mean(cfg_point_quark_corr_z, axis=0))
+        point_quark_corr_t.append(np.mean(cfg_point_quark_corr_t, axis=0))
+
 
 print("\n>>> shape of point_quark_corr_z: ", point_quark_corr_z[0].shape)
 print(">>> shape of point_quark_corr_t: ", point_quark_corr_t[0].shape)
@@ -89,19 +107,22 @@ ax.errorbar(
     np.arange(len(point_meff_z)),
     gv.mean(point_meff_z),
     yerr=gv.sdev(point_meff_z),
-    label="point-z",
+    label="16-src-avg-z",
     **errorb,
 )
 ax.errorbar(
     np.arange(len(point_meff_t)),
     gv.mean(point_meff_t),
     yerr=gv.sdev(point_meff_t),
-    label="point-t",
+    label="16-src-avg-t",
     **errorb,
 )
 ax.legend(ncol=2, **fs_small_p)
 ax.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
 ax.set_ylabel(r"$m_{\mathrm{eff}}$", **fs_p)
+ax.set_ylim(-2, 3)
 plt.tight_layout()
+plt.savefig(f"../artifacts/plots/quark_meff_{ensemble}.pdf", transparent=True)
 plt.show()
+
 # %%
