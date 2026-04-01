@@ -10,13 +10,12 @@ Utilities and notes for implementing the Integrated Polyakov gauge (IPG) on top 
 
 ## Environment
 
-Use the `pygpt` conda environment:
+The repository now includes two environment descriptions:
 
-```bash
-conda activate pygpt
-```
+- [`requirements.txt`](/home/jinchen/git/anl/IPG4Lattice/requirements.txt): Python packages used by the current scripts.
+- [`environment.yml`](/home/jinchen/git/anl/IPG4Lattice/environment.yml): a conda environment template including MPI/CUDA-related base packages.
 
-The implementation assumes `pyquda`, `pyquda_utils`, `scipy`, and `opt_einsum` are available in that environment.
+In practice, `PyQUDA` and CUDA/MPI compatibility are machine-dependent, so `environment.yml` should be treated as a starting point rather than a guaranteed one-command setup on every system.
 
 ## Repository layout
 
@@ -47,7 +46,6 @@ The implementation also records the important Appendix A interpretation used in 
 Generate CG+IPG gauges:
 
 ```bash
-conda activate pygpt
 python scripts/ipg_fix.py \
   --input-dir ensemble/S16T16_cg/gauge \
   --output-dir ensemble/S16T16_cg_ipg/gauge \
@@ -59,7 +57,6 @@ python scripts/ipg_fix.py \
 Validate the propagator against the original CG ensemble:
 
 ```bash
-conda activate pygpt
 python scripts/validate_cg_ipg.py \
   --cg-dir ensemble/S16T16_cg/gauge \
   --ipg-dir ensemble/S16T16_cg_ipg/gauge \
@@ -80,3 +77,4 @@ Generated ensemble files are intentionally ignored by git.
 
 - The current validation observable is exactly the same slice used in `scripts/quark_prop.py`: `data[0,0,:,0]`.
 - `--cfg-start/--cfg-stop` filter by the trailing configuration index, so combine them with `--glob` if multiple solver tolerances exist for the same configuration number.
+- QUDA, CUDA, MPI, and GPU driver compatibility are not fully portable; adjust [`environment.yml`](/home/jinchen/git/anl/IPG4Lattice/environment.yml) to match your local system.
