@@ -20,7 +20,7 @@ if not os.path.exists(".cache"):
     print("Created .cache directory for PyQUDA resources")
 
 
-ensemble = "S16T16_cg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg"
+ensemble = "S16T16_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg"
 
 
 init([1, 1, 1, 1], resource_path=".cache")
