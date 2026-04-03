@@ -4,6 +4,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+import numpy as np
+
 from ipg_utils import (
     cfg_subset_from_args,
     default_ipg_name,
@@ -22,6 +24,7 @@ from ipg_utils import (
     transform_determinant_error,
     transform_unitarity_error,
     unitary_error,
+    write_nersc_gauge,
 )
 
 
@@ -55,12 +58,49 @@ def parse_args() -> argparse.Namespace:
         default=1e-10,
         help="Allowed max absolute link difference between the written IPG gauge and the reconstructed one.",
     )
+    parser.add_argument(
+        "--repair-spread",
+        action="store_true",
+        help="If post_spread exceeds tolerance, rebuild and overwrite the failing CG+IPG gauge.",
+    )
+    parser.add_argument(
+        "--repair-max-iters",
+        type=int,
+        default=3,
+        help="Maximum number of repeated IPG passes used when repairing a large post_spread.",
+    )
     return parser.parse_args()
+
+
+def build_ipg_reference(gauge, projection_method: str, spread_tol: float, max_iters: int):
+    if max_iters < 1:
+        raise ValueError("max_iters must be at least 1")
+
+    current = gauge
+    result = None
+    cumulative_transform = None
+    iterations = 0
+    for iterations in range(1, max_iters + 1):
+        result = make_ipg_gauge(current, projection_method=projection_method)
+        if cumulative_transform is None:
+            cumulative_transform = result.transform.copy()
+        else:
+            cumulative_transform = result.transform @ cumulative_transform
+        if result.transformed_spread <= spread_tol:
+            break
+        current = result.gauge
+
+    assert result is not None
+    assert cumulative_transform is not None
+    return result, iterations, cumulative_transform
 
 
 def main() -> int:
     args = parse_args()
     ensure_pyquda_initialized()
+    ipg_dir = args.ipg_dir.resolve()
+    output_root = ipg_dir.parent if ipg_dir.name == "gauge" else ipg_dir
+    transform_dir = output_root / "ipg_transform"
 
     cg_files = list_gauge_files(args.cg_dir.resolve(), args.glob)
     cfg_list = parse_cfg_list(args.cfg_list)
@@ -84,10 +124,11 @@ def main() -> int:
         "logm_err": 0.0,
     }
     failures = []
+    repaired = []
 
     for cg_path in cg_files:
         cfg = extract_cfg_index(cg_path)
-        ipg_path = args.ipg_dir.resolve() / default_ipg_name(cg_path.name)
+        ipg_path = ipg_dir / default_ipg_name(cg_path.name)
         if not ipg_path.exists():
             raise SystemExit(f"Missing CG+IPG gauge for cfg {cfg}: {ipg_path}")
 
@@ -99,20 +140,62 @@ def main() -> int:
         cg_lexico = cg_gauge.lexico().copy()
         ipg_lexico = ipg_gauge.lexico().copy()
         result = make_ipg_gauge(cg_gauge, projection_method=args.projection_method)
+        reference_result, reference_iters, reference_transform = build_ipg_reference(
+            cg_gauge,
+            projection_method=args.projection_method,
+            spread_tol=args.spread_tol,
+            max_iters=args.repair_max_iters,
+        )
 
         pre_spread = projected_temporal_spread(cg_lexico, projection_method=args.projection_method)
         post_spread = projected_temporal_spread(ipg_lexico, projection_method=args.projection_method)
         post_projected = projected_temporal_links(ipg_lexico, projection_method=args.projection_method)
 
         residual = target_residual_error(result.projected_temporal_links, result.transform, result.target_matrix)
-        target_dev = target_deviation(post_projected, result.target_matrix)
-        reconstruct = gauge_max_abs_diff(result.gauge.lexico(), ipg_lexico)
+        target_dev = target_deviation(post_projected, reference_result.target_matrix)
+        reconstruct = gauge_max_abs_diff(reference_result.gauge.lexico(), ipg_lexico)
         target_unitarity = unitary_error(result.target_matrix)
         target_det = determinant_error(result.target_matrix)
         polyakov_unitarity = unitary_error(result.polyakov_matrix)
         polyakov_det = determinant_error(result.polyakov_matrix)
         transform_unitarity = transform_unitarity_error(result.transform)
         transform_det = transform_determinant_error(result.transform)
+
+        print("\n" + "-" * 20)
+        print(
+            f"[cfg {cfg}] pre_spread={pre_spread:.3e} post_spread={post_spread:.3e} "
+            f"boundary={result.boundary_error:.3e} residual={residual:.3e} "
+            f"target_dev={target_dev:.3e} reconstruct={reconstruct:.3e}"
+        )
+        print("\n" + "-" * 20)
+        print(
+            f"[cfg {cfg}] target_u={target_unitarity:.3e} target_det={target_det:.3e} "
+            f"polyakov_u={polyakov_unitarity:.3e} polyakov_det={polyakov_det:.3e} "
+            f"transform_u={transform_unitarity:.3e} transform_det={transform_det:.3e} "
+            f"logm_err={result.logm_error:.3e} ref_passes={reference_iters}"
+        )
+
+        if args.repair_spread and post_spread > args.spread_tol:
+            print("\n" + "-" * 20)
+            print(
+                f"[cfg {cfg}] post_spread={post_spread:.3e} exceeds tolerance {args.spread_tol:.3e}; "
+                f"rewriting from CG with up to {args.repair_max_iters} IPG pass(es)"
+            )
+            write_nersc_gauge(ipg_path, reference_result.gauge)
+            transform_dir.mkdir(parents=True, exist_ok=True)
+            np.save(transform_dir / f"{cg_path.name}.npy", reference_transform)
+            ipg_gauge = read_nersc_gauge(ipg_path)
+            ipg_lexico = ipg_gauge.lexico().copy()
+            post_spread = projected_temporal_spread(ipg_lexico, projection_method=args.projection_method)
+            post_projected = projected_temporal_links(ipg_lexico, projection_method=args.projection_method)
+            target_dev = target_deviation(post_projected, reference_result.target_matrix)
+            reconstruct = gauge_max_abs_diff(reference_result.gauge.lexico(), ipg_lexico)
+            repaired.append((cfg, reference_iters, post_spread))
+            print("\n" + "-" * 20)
+            print(
+                f"[cfg {cfg}] repaired post_spread={post_spread:.3e} "
+                f"reconstruct={reconstruct:.3e} passes={reference_iters}"
+            )
 
         metrics = {
             "pre_spread": pre_spread,
@@ -132,20 +215,6 @@ def main() -> int:
 
         for key, value in metrics.items():
             global_metrics[key] = max(global_metrics[key], value)
-
-        print("\n" + "-" * 20)
-        print(
-            f"[cfg {cfg}] pre_spread={pre_spread:.3e} post_spread={post_spread:.3e} "
-            f"boundary={result.boundary_error:.3e} residual={residual:.3e} "
-            f"target_dev={target_dev:.3e} reconstruct={reconstruct:.3e}"
-        )
-        print("\n" + "-" * 20)
-        print(
-            f"[cfg {cfg}] target_u={target_unitarity:.3e} target_det={target_det:.3e} "
-            f"polyakov_u={polyakov_unitarity:.3e} polyakov_det={polyakov_det:.3e} "
-            f"transform_u={transform_unitarity:.3e} transform_det={transform_det:.3e} "
-            f"logm_err={result.logm_error:.3e}"
-        )
 
         if (
             post_spread > args.spread_tol
@@ -185,6 +254,10 @@ def main() -> int:
                 f"boundary={boundary:.3e} residual={residual:.3e} reconstruct={reconstruct:.3e}"
             )
         return 1
+
+    if repaired:
+        for cfg, passes, post_spread in repaired:
+            print(f"REPAIRED cfg={cfg} passes={passes} post_spread={post_spread:.3e}")
 
     print("\nAll configurations passed validation.\n")
     print("\n" + "=" * 20)

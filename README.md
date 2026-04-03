@@ -117,6 +117,19 @@ python scripts/validate_cg_ipg.py \
   --n-conf 1
 ```
 
+If a written `CG+IPG` gauge has `post_spread` above tolerance, validation can optionally rebuild that configuration from the original `CG` gauge and overwrite the failing output:
+
+```bash
+python scripts/validate_cg_ipg.py \
+  --cg-dir ensemble/S16T16_cg/gauge \
+  --ipg-dir ensemble/S16T16_cg_ipg/gauge \
+  --glob 'wilson_b6.cg.1e-08.*' \
+  --repair-spread \
+  --repair-max-iters 3
+```
+
+When `--repair-spread` is enabled, the sibling `ipg_transform/*.npy` archive is also rewritten so that the saved residual gauge transformation matches the repaired `CG+IPG` gauge.
+
 Run the current quark-propagator and Green's-function analysis scripts:
 
 ```bash
