@@ -44,7 +44,7 @@ The current implementation follows Appendix A of the paper on top of an already 
 7. Apply the residual transform
    `U'_i(x,t) = g(t) U_i(x,t) g†(t)` and
    `U'_4(x,t) = g(t) U_4(x,t) g†(t+1)`.
-8. Write the resulting `CG+IPG` gauge only into a new output directory, leaving the original CG ensemble untouched.
+8. Write the resulting `CG+IPG` gauge only into a new output root, leaving the original CG ensemble untouched.
 
 The implementation uses the matrix product interpretation of Appendix A:
 `P^(1/T)` is taken from the `SU(3)` matrix `P = ∏_t u(t)`, not from a traced scalar Polyakov loop.
@@ -101,7 +101,7 @@ Generate CG+IPG gauges:
 ```bash
 python scripts/ipg_fix.py \
   --input-dir ensemble/S16T16_cg/gauge \
-  --output-dir ensemble/S16T16_cg_ipg/gauge \
+  --output-dir ensemble/S16T16_cg_ipg \
   --glob 'wilson_b6.cg.1e-08.*' \
   --save-transform \
   --verify-readback
@@ -128,9 +128,10 @@ python scripts/qprop_greens.py
 ## Output conventions
 
 - Input CG ensemble: `ensemble/S16T16_cg/gauge/wilson_b6.cg.*`
+- Output root passed to `scripts/ipg_fix.py --output-dir`: `ensemble/S16T16_cg_ipg`
 - Output CG+IPG ensemble: `ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.*`
-- Saved residual transform: `ensemble/S16T16_cg_ipg/ipg_transform/*.npy`
-- The intended output layout is an output root containing sibling `gauge/` and `ipg_transform/` directories.
+- Saved residual time-only gauge transformation `g(t)` from the original `CG` gauge to the written `CG+IPG` gauge: `ensemble/S16T16_cg_ipg/ipg_transform/*.npy`
+- `scripts/ipg_fix.py` automatically creates the sibling `gauge/` and `ipg_transform/` directories under the output root.
 - Local analysis plots: `artifacts/plots/*.pdf`
 
 Generated ensemble files and plots are intentionally ignored by git.

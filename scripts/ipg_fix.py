@@ -20,11 +20,20 @@ from ipg_utils import (
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Apply Integrated Polyakov gauge on top of CG-fixed NERSC ensembles.")
     parser.add_argument("--input-dir", required=True, type=Path, help="Directory containing CG-fixed NERSC gauge files.")
-    parser.add_argument("--output-dir", required=True, type=Path, help="Directory to write CG+IPG NERSC gauge files.")
+    parser.add_argument(
+        "--output-dir",
+        required=True,
+        type=Path,
+        help="Output root; CG+IPG gauges are written under gauge/ and saved transforms under ipg_transform/.",
+    )
     parser.add_argument("--glob", default="wilson_b6.cg.*", help="Filename glob for input gauge files.")
     parser.add_argument("--cfg-start", type=int, default=None, help="Lowest configuration index to include.")
     parser.add_argument("--cfg-stop", type=int, default=None, help="Highest configuration index to include.")
-    parser.add_argument("--save-transform", action="store_true", help="Save g(t) as .npy under ../ipg_transform.")
+    parser.add_argument(
+        "--save-transform",
+        action="store_true",
+        help="Save the residual time-only gauge transformation g(t) under ipg_transform/ as .npy files.",
+    )
     parser.add_argument("--overwrite", action="store_true", help="Overwrite existing output files.")
     parser.add_argument(
         "--projection-method",
@@ -45,9 +54,11 @@ def main() -> int:
     ensure_pyquda_initialized()
 
     input_dir = args.input_dir.resolve()
-    output_dir = args.output_dir.resolve()
-    output_root = output_dir.parent if output_dir.name == "gauge" else output_dir
+    output_root = args.output_dir.resolve()
+    output_dir = output_root / "gauge"
     transform_dir = output_root / "ipg_transform"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    transform_dir.mkdir(parents=True, exist_ok=True)
 
     gauge_files = list_gauge_files(input_dir, args.glob, args.cfg_start, args.cfg_stop)
     if not gauge_files:
@@ -72,7 +83,6 @@ def main() -> int:
         write_nersc_gauge(output_path, result.gauge)
 
         if args.save_transform:
-            transform_dir.mkdir(parents=True, exist_ok=True)
             np.save(transform_dir / f"{gauge_path.name}.npy", result.transform)
 
         if args.verify_readback:
