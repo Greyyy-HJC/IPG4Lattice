@@ -169,7 +169,7 @@ def project_to_su3(matrix: np.ndarray, method: str = "cabibbo-marinari") -> np.n
 
 
 def average_temporal_links(gauge_lexico: np.ndarray) -> np.ndarray:
-    return gauge_lexico[3].mean(axis=(1, 2, 3))
+    return gauge_lexico[3].mean(axis=(1, 2, 3)) # shape of gauge_lexico is (Nd, T, Lz, Ly, Lx, 3, 3), we take the T direction gauge links and average over spatial dimensions to get (T, 3, 3)
 
 
 def projected_temporal_links(
