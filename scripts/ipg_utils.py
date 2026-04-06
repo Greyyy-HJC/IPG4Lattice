@@ -15,6 +15,11 @@ from pyquda_utils import core, gamma, io, source
 
 _PYQUDA_INITIALIZED = False
 _SU2_PAIRS: Tuple[Tuple[int, int], ...] = ((0, 1), (0, 2), (1, 2))
+_Z3_PHASES: Tuple[complex, ...] = (
+    np.exp(0j),
+    np.exp(2j * np.pi / 3),
+    np.exp(-2j * np.pi / 3),
+)
 
 
 @dataclass(frozen=True)
@@ -168,6 +173,14 @@ def project_to_su3(matrix: np.ndarray, method: str = "cabibbo-marinari") -> np.n
     raise ValueError(f"Unsupported SU(3) projection method: {method}")
 
 
+def z3_align(matrix: np.ndarray, reference: np.ndarray) -> np.ndarray:
+    """Return ``phase * matrix`` for the Z_3 center phase minimising distance to *reference*."""
+    return min(
+        (phase * matrix for phase in _Z3_PHASES),
+        key=lambda candidate: float(np.linalg.norm(candidate - reference)),
+    )
+
+
 def average_temporal_links(gauge_lexico: np.ndarray) -> np.ndarray:
     return gauge_lexico[3].mean(axis=(1, 2, 3)) # shape of gauge_lexico is (Nd, T, Lz, Ly, Lx, 3, 3), we take the T direction gauge links and average over spatial dimensions to get (T, 3, 3)
 
@@ -175,9 +188,13 @@ def average_temporal_links(gauge_lexico: np.ndarray) -> np.ndarray:
 def projected_temporal_links(
     gauge_lexico: np.ndarray,
     projection_method: str = "cabibbo-marinari",
+    z3_reference: Optional[np.ndarray] = None,
 ) -> np.ndarray:
     averaged = average_temporal_links(gauge_lexico)
-    return np.stack([project_to_su3(link, method=projection_method) for link in averaged], axis=0)
+    projected = np.stack([project_to_su3(link, method=projection_method) for link in averaged], axis=0)
+    if z3_reference is not None:
+        projected = np.stack([z3_align(link, z3_reference) for link in projected], axis=0)
+    return projected
 
 
 def integrated_polyakov_matrix(projected_temporal_links: np.ndarray) -> np.ndarray:
@@ -251,8 +268,9 @@ def apply_residual_transform_lexico(gauge_lexico: np.ndarray, transform: np.ndar
 def projected_temporal_spread(
     gauge_lexico: np.ndarray,
     projection_method: str = "cabibbo-marinari",
+    z3_reference: Optional[np.ndarray] = None,
 ) -> float:
-    projected = projected_temporal_links(gauge_lexico, projection_method=projection_method)
+    projected = projected_temporal_links(gauge_lexico, projection_method=projection_method, z3_reference=z3_reference)
     return float(max(np.linalg.norm(link - projected[0]) for link in projected))
 
 
@@ -267,7 +285,7 @@ def target_residual_error(projected_temporal_links: np.ndarray, transform: np.nd
 
 
 def target_deviation(projected_temporal_links: np.ndarray, target: np.ndarray) -> float:
-    return float(max(np.linalg.norm(link - target) for link in projected_temporal_links))
+    return float(max(np.linalg.norm(z3_align(link, target) - target) for link in projected_temporal_links))
 
 
 def transform_unitarity_error(transform: np.ndarray) -> float:
@@ -301,7 +319,7 @@ def make_ipg_gauge(
     )
     transformed_lexico = apply_residual_transform_lexico(lexico, transform)
     transformed_gauge = LatticeGauge(gauge.latt_info, gauge.latt_info.evenodd(transformed_lexico, True))
-    spread = projected_temporal_spread(transformed_lexico, projection_method=projection_method)
+    spread = projected_temporal_spread(transformed_lexico, projection_method=projection_method, z3_reference=target)
     return IPGResult(
         gauge=transformed_gauge,
         transform=transform,

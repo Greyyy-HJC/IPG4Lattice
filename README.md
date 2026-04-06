@@ -54,6 +54,7 @@ Current numerical choices for the IPG step are:
 - The residual IPG construction is carried out in double precision (`numpy`/`scipy` complex128).
 - The Cabibbo-Marinari projection sweep stops at an internal tolerance of `1e-14`.
 - The `SU(3)` projection is required to satisfy a unitarity check at the `1e-10` level.
+- A `Z_3` center alignment step is applied after every `SU(3)` projection of the post-IPG temporal-link averages.  The Cabibbo-Marinari subgroup iteration is not equivariant under `SU(3)` conjugation, so after the residual gauge transform `g(t)` is applied, re-projecting the transformed spatial averages can land on a different `Z_3` branch (`ωC` or `ω²C` instead of `C`, where `ω = e^{2πi/3}`).  The alignment step picks the center phase that minimises the Frobenius distance to the target matrix `C`, eliminating the spurious spread of exactly `√3 × √3 = 3.0` that otherwise appears on affected configurations.
 - In practice the resulting IPG diagnostics are usually observed at around `1e-14` to `1e-13`, while the final ensemble quality is still limited by the precision of the input Coulomb-gauge fixing.
 
 ## IPG validation
@@ -63,10 +64,10 @@ Current numerical choices for the IPG step are:
 The reported diagnostics are:
 
 - `pre_spread`: spread of the projected temporal-link averages before IPG.
-- `post_spread`: spread of the projected temporal-link averages after IPG. This should be small if the time-slice averages have been flattened to a constant.
+- `post_spread`: spread of the projected temporal-link averages after IPG, measured with `Z_3` alignment to the target matrix. This should be small if the time-slice averages have been flattened to a constant.
 - `boundary`: periodic closure error of the recursive `g(t)` construction.
 - `residual`: maximum violation of `g(t) u(t) g†(t+1) = C`.
-- `target_dev`: maximum deviation of the post-IPG projected temporal-link averages from the target constant matrix `C`.
+- `target_dev`: maximum deviation of the post-IPG projected temporal-link averages from the target constant matrix `C`, with `Z_3` alignment applied before comparison.
 - `reconstruct`: maximum link-wise difference between the written `CG+IPG` gauge and the gauge reconstructed directly from the original CG gauge using the implementation.
 - `target_u`, `polyakov_u`, `transform_u`: unitarity checks for the target matrix, integrated Polyakov matrix, and residual transform.
 - `target_det`, `polyakov_det`, `transform_det`: determinant checks for the same objects.
@@ -152,5 +153,6 @@ Generated ensemble files and plots are intentionally ignored by git.
 ## Notes
 
 - `scripts/validate_cg_ipg.py` now reports definition-level diagnostics such as `post_spread`, `boundary`, `residual`, and `reconstruct`.
+- All post-IPG projection metrics (`post_spread`, `target_dev`) are `Z_3`-aligned to the target matrix `C`, so configurations whose Cabibbo-Marinari projection lands on a different center branch are handled correctly rather than producing a spurious spread of `3.0`.
 - `--cfg-start/--cfg-stop` filter by the trailing configuration index, so combine them with `--glob` if multiple solver tolerances exist for the same configuration number.
 - QUDA, CUDA, MPI, and GPU driver compatibility are not fully portable; adjust [`environment.yml`](/home/jinchen/git/anl/IPG4Lattice/environment.yml) to match your local system.

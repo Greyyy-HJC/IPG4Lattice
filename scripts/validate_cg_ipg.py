@@ -148,8 +148,8 @@ def main() -> int:
         )
 
         pre_spread = projected_temporal_spread(cg_lexico, projection_method=args.projection_method)
-        post_spread = projected_temporal_spread(ipg_lexico, projection_method=args.projection_method)
-        post_projected = projected_temporal_links(ipg_lexico, projection_method=args.projection_method)
+        post_spread = projected_temporal_spread(ipg_lexico, projection_method=args.projection_method, z3_reference=result.target_matrix)
+        post_projected = projected_temporal_links(ipg_lexico, projection_method=args.projection_method, z3_reference=result.target_matrix)
 
         residual = target_residual_error(result.projected_temporal_links, result.transform, result.target_matrix)
         target_dev = target_deviation(post_projected, reference_result.target_matrix)
@@ -186,8 +186,8 @@ def main() -> int:
             np.save(transform_dir / f"{cg_path.name}.npy", reference_transform)
             ipg_gauge = read_nersc_gauge(ipg_path)
             ipg_lexico = ipg_gauge.lexico().copy()
-            post_spread = projected_temporal_spread(ipg_lexico, projection_method=args.projection_method)
-            post_projected = projected_temporal_links(ipg_lexico, projection_method=args.projection_method)
+            post_spread = projected_temporal_spread(ipg_lexico, projection_method=args.projection_method, z3_reference=reference_result.target_matrix)
+            post_projected = projected_temporal_links(ipg_lexico, projection_method=args.projection_method, z3_reference=reference_result.target_matrix)
             target_dev = target_deviation(post_projected, reference_result.target_matrix)
             reconstruct = gauge_max_abs_diff(reference_result.gauge.lexico(), ipg_lexico)
             repaired.append((cfg, reference_iters, post_spread))
