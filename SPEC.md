@@ -4,7 +4,7 @@
 - Goal: produce a new `CG+IPG` ensemble set from the existing `ensemble/S16T16_cg/gauge/wilson_b6.cg.*` inputs while leaving the original CG-fixed ensemble untouched.
 - Runtime: all scripts are expected to run under `conda activate pygpt`.
 - Scope v1: only `S16T16_cg`.
-- Validation observable: keep the current spatial-line quark propagator slice from [`scripts/quark_prop.py`](/home/jinchen/git/anl/IPG4Lattice/scripts/quark_prop.py), namely `data[0,0,:,0]`.
+- Validation approach: definition-level validation via [`scripts/validate_cg_ipg.py`](/home/jinchen/git/anl/IPG4Lattice/scripts/validate_cg_ipg.py), which rebuilds the Appendix A transform directly from the original CG gauge and checks the written CG+IPG gauge against metrics including `post_spread`, `boundary`, `residual`, `target_dev`, and `reconstruct`. Quark-propagator scripts are kept as supplementary physics sanity checks.
 
 ## Integrated Polyakov Gauge
 - Start from a Coulomb-gauge-fixed ensemble. Coulomb gauge is assumed complete before IPG runs.
@@ -69,9 +69,10 @@ U'4(x, t) = g(t) U4(x, t) g†(t + 1)
   - Write new NERSC gauges to a separate output directory
   - Optional `.npy` archive of the time-only residual transform `g(t)`
 - [`scripts/validate_cg_ipg.py`](/home/jinchen/git/anl/IPG4Lattice/scripts/validate_cg_ipg.py)
-  - Compare CG and CG+IPG ensembles using the current quark propagator slice
-  - Report per-configuration and global max differences
-  - Exit non-zero if tolerance is violated
+  - Definition-level validation: rebuild the Appendix A transform from each original CG gauge and compare against the written CG+IPG gauge
+  - Report per-configuration and global-maximum metrics: `post_spread`, `boundary`, `residual`, `target_dev`, `reconstruct`, unitarity/determinant checks, `logm_err`
+  - Optional `--repair-spread` mode: rebuild and overwrite failing configurations with up to `--repair-max-iters` IPG passes
+  - Exit non-zero if any configuration exceeds the configured tolerances
 
 ## Script Interfaces
 - `python scripts/ipg_fix.py --input-dir ensemble/S16T16_cg/gauge --output-dir ensemble/S16T16_cg_ipg/gauge`
@@ -79,7 +80,9 @@ U'4(x, t) = g(t) U4(x, t) g†(t + 1)
   - Optional: `--glob`, `--cfg-start`, `--cfg-stop`, `--save-transform`, `--overwrite`
 - `python scripts/validate_cg_ipg.py --cg-dir ensemble/S16T16_cg/gauge --ipg-dir ensemble/S16T16_cg_ipg/gauge`
   - Required: `--cg-dir`, `--ipg-dir`
-  - Optional: `--n-conf`, `--cfg-list`, `--mass`, `--tol`
+  - Optional: `--glob`, `--n-conf`, `--cfg-list`, `--projection-method`
+  - Tolerance options: `--spread-tol` (default `1e-10`), `--boundary-tol` (default `1e-10`), `--reconstruct-tol` (default `1e-10`)
+  - Repair options: `--repair-spread`, `--repair-max-iters` (default `3`)
 
 ## Acceptance Criteria
 - Numerical construction:
@@ -94,9 +97,13 @@ max_t ||u'(t) - u'(0)|| < 1e-10
 - I/O:
   - Every written `CG+IPG` gauge can be re-read through `pyquda_utils.io.readNERSCGauge`.
   - `ensemble/S16T16_cg` remains unchanged.
-- Physics validation:
-  - On a sample configuration, the current spatial-line propagator from CG and CG+IPG must agree within solver/noise tolerance.
-  - On the production batch, the same observable must agree per configuration within `1e-8` absolute tolerance.
+- Physics validation (definition-level, from `scripts/validate_cg_ipg.py`):
+  - `post_spread`: spread of the projected temporal-link averages after IPG (Z_3-aligned to `C`) must be below `--spread-tol`.
+  - `boundary`: periodic-closure error of the recursive `g(t)` construction must be below `--boundary-tol`.
+  - `residual`: maximum violation of `g(t) u(t) g†(t+1) = C` must be below `--boundary-tol`.
+  - `reconstruct`: maximum link-wise difference between the written CG+IPG gauge and the gauge reconstructed from the original CG gauge must be below `--reconstruct-tol`.
+  - Default tolerances are `1e-10` for all three thresholds.
+  - Quark-propagator agreement checks (coordinate-space spatial propagator, temporal propagator, momentum-projected Green's functions) are carried out as supplementary physics sanity checks via `scripts/qprop_static.py`, `scripts/qprop_mom.py`, and `scripts/qprop_greens.py`.
 
 ## Notes
 - The residual IPG transform is spatially constant on each time slice, so the working expectation is that the CG-sensitive spatial propagator should remain unchanged after IPG.

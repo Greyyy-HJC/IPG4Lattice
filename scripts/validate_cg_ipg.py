@@ -152,6 +152,7 @@ def main() -> int:
         post_projected = projected_temporal_links(ipg_lexico, projection_method="polar", z3_reference=result.target_matrix)
 
         residual = target_residual_error(result.projected_temporal_links, result.transform, result.target_matrix)
+        boundary_error = result.boundary_error
         target_dev = target_deviation(post_projected, reference_result.target_matrix)
         reconstruct = gauge_max_abs_diff(reference_result.gauge.lexico(), ipg_lexico)
         target_unitarity = unitary_error(result.target_matrix)
@@ -164,7 +165,7 @@ def main() -> int:
         print("\n" + "-" * 20)
         print(
             f"[cfg {cfg}] pre_spread={pre_spread:.3e} post_spread={post_spread:.3e} "
-            f"boundary={result.boundary_error:.3e} residual={residual:.3e} "
+            f"boundary={boundary_error:.3e} residual={residual:.3e} "
             f"target_dev={target_dev:.3e} reconstruct={reconstruct:.3e}"
         )
         print("\n" + "-" * 20)
@@ -192,6 +193,12 @@ def main() -> int:
             post_projected = projected_temporal_links(ipg_lexico, projection_method="polar", z3_reference=reference_result.target_matrix)
             target_dev = target_deviation(post_projected, reference_result.target_matrix)
             reconstruct = gauge_max_abs_diff(reference_result.gauge.lexico(), ipg_lexico)
+            boundary_error = reference_result.boundary_error
+            residual = target_residual_error(
+                reference_result.projected_temporal_links,
+                reference_result.transform,
+                reference_result.target_matrix,
+            )
             repaired.append((cfg, reference_iters, post_spread))
             print("\n" + "-" * 20)
             print(
@@ -202,7 +209,7 @@ def main() -> int:
         metrics = {
             "pre_spread": pre_spread,
             "post_spread": post_spread,
-            "boundary": result.boundary_error,
+            "boundary": boundary_error,
             "residual": residual,
             "target_dev": target_dev,
             "reconstruct": reconstruct,
@@ -220,11 +227,11 @@ def main() -> int:
 
         if (
             post_spread > args.spread_tol
-            or result.boundary_error > args.boundary_tol
+            or boundary_error > args.boundary_tol
             or residual > args.boundary_tol
             or reconstruct > args.reconstruct_tol
         ):
-            failures.append((cfg, post_spread, result.boundary_error, residual, reconstruct))
+            failures.append((cfg, post_spread, boundary_error, residual, reconstruct))
 
     print("\n" + "-" * 20)
     print("Global maxima:")
