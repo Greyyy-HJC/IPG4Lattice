@@ -45,13 +45,14 @@ I = gamma.gamma(0)
 x_src_positions = [(i * latt_size[0]) // 4 for i in range(2)]
 y_src_positions = [(i * latt_size[1]) // 4 for i in range(2)]
 source_positions = [[x, y, 0, 0] for x in x_src_positions for y in y_src_positions]
-print("Averaging over source positions:", source_positions)
+if latt_info.mpi_rank == 0:
+    print("Averaging over source positions:", source_positions)
 
 # Lists to store correlation functions
 point_quark_corr_z = []
 point_quark_corr_t = []
 
-for cfg in tqdm(range(N_conf), desc="Processing configurations"):
+for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=latt_info.mpi_rank != 0):
     
     if ensemble == "S16T16":
         gauge = io.readNERSCGauge(f"../ensemble/S16T16/wilson_b6.{cfg}")
@@ -82,11 +83,13 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations"):
                 [0, 1, 2, 3],
             )
 
-            cfg_point_quark_corr_z.append(point_quark_corr_4d[src_t, :, src_y, src_x]) # t z y x
-            cfg_point_quark_corr_t.append(point_quark_corr_4d[:, src_z, src_y, src_x]) # t z y x
+            if latt_info.mpi_rank == 0:
+                cfg_point_quark_corr_z.append(point_quark_corr_4d[src_t, :, src_y, src_x]) # t z y x
+                cfg_point_quark_corr_t.append(point_quark_corr_4d[:, src_z, src_y, src_x]) # t z y x
 
-        point_quark_corr_z.append(np.mean(cfg_point_quark_corr_z, axis=0)) # avg over source positions
-        point_quark_corr_t.append(np.mean(cfg_point_quark_corr_t, axis=0))
+        if latt_info.mpi_rank == 0:
+            point_quark_corr_z.append(np.mean(cfg_point_quark_corr_z, axis=0)) # avg over source positions
+            point_quark_corr_t.append(np.mean(cfg_point_quark_corr_t, axis=0))
 
 
 # %%
