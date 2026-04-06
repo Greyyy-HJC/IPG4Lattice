@@ -175,10 +175,12 @@ def main() -> int:
             f"logm_err={result.logm_error:.3e} ref_passes={reference_iters}"
         )
 
-        if args.repair_spread and post_spread > args.spread_tol:
+        needs_repair = post_spread > args.spread_tol or reconstruct > args.reconstruct_tol
+        if args.repair_spread and needs_repair:
             print("\n" + "-" * 20)
             print(
-                f"[cfg {cfg}] post_spread={post_spread:.3e} exceeds tolerance {args.spread_tol:.3e}; "
+                f"[cfg {cfg}] post_spread={post_spread:.3e} reconstruct={reconstruct:.3e} "
+                f"(tol spread={args.spread_tol:.3e} reconstruct={args.reconstruct_tol:.3e}); "
                 f"rewriting from CG with up to {args.repair_max_iters} IPG pass(es)"
             )
             write_nersc_gauge(ipg_path, reference_result.gauge)
