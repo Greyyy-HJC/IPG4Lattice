@@ -77,7 +77,7 @@ U'4(x, t) = g(t) U4(x, t) g†(t + 1)
 ## Script Interfaces
 - `python scripts/ipg_fix.py --input-dir ensemble/S16T16_cg/gauge --output-dir ensemble/S16T16_cg_ipg/gauge`
   - Required: `--input-dir`, `--output-dir`
-  - Optional: `--glob`, `--cfg-start`, `--cfg-stop`, `--save-transform`, `--overwrite`
+  - Optional: `--glob`, `--cfg-start`, `--cfg-stop`, `--save-transform`, `--overwrite`, `--projection-method`
 - `python scripts/validate_cg_ipg.py --cg-dir ensemble/S16T16_cg/gauge --ipg-dir ensemble/S16T16_cg_ipg/gauge`
   - Required: `--cg-dir`, `--ipg-dir`
   - Optional: `--glob`, `--n-conf`, `--cfg-list`, `--projection-method`
