@@ -319,7 +319,7 @@ def make_ipg_gauge(
     )
     transformed_lexico = apply_residual_transform_lexico(lexico, transform)
     transformed_gauge = LatticeGauge(gauge.latt_info, gauge.latt_info.evenodd(transformed_lexico, True))
-    spread = projected_temporal_spread(transformed_gauge.lexico(), projection_method="polar", z3_reference=target)
+    spread = projected_temporal_spread(transformed_gauge.lexico(), projection_method=projection_method, z3_reference=target)
     return IPGResult(
         gauge=transformed_gauge,
         transform=transform,
