@@ -63,11 +63,11 @@ for gamma_name, gamma_matrix in zip(["I", "gX", "gY", "gZ", "gT"], [I, gX, gY, g
     for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
         
         if ensemble == "S16T16":
-            gauge = io.readNERSCGauge(f"../ensemble/S16T16/wilson_b6.{cfg}")
+            gauge = io.readNERSCGauge(f"ensemble/S16T16/wilson_b6.{cfg}")
         elif ensemble == "S16T16_cg":
-            gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
+            gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
         elif ensemble == "S16T16_cg_ipg":
-            gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+            gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
         
         # Apply smearing to gauge field
         # gauge.stoutSmear(1, 0.125, 4)
@@ -124,7 +124,7 @@ for gamma_name, gamma_matrix in zip(["I", "gX", "gY", "gZ", "gT"], [I, gX, gY, g
         ax.set_ylabel(r"$m_{\mathrm{eff}}$", **fs_p)
         ax.set_ylim(-2, 4)
         plt.tight_layout()
-        plt.savefig(f"../artifacts/plots/qprop_mom_tdir_meff_{ensemble}_{gamma_name}.pdf", transparent=True)
+        plt.savefig(f"artifacts/plots/qprop_mom_tdir_meff_{ensemble}_{gamma_name}.pdf", transparent=True)
         plt.show()
 
 # %%

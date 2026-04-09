@@ -55,11 +55,11 @@ point_quark_corr_t = []
 for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=latt_info.mpi_rank != 0):
     
     if ensemble == "S16T16":
-        gauge = io.readNERSCGauge(f"../ensemble/S16T16/wilson_b6.{cfg}")
+        gauge = io.readNERSCGauge(f"ensemble/S16T16/wilson_b6.{cfg}")
     elif ensemble == "S16T16_cg":
-        gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
+        gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
     elif ensemble == "S16T16_cg_ipg":
-        gauge = io.readNERSCGauge(f"../ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+        gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
     
     # Apply smearing to gauge field
     # gauge.stoutSmear(1, 0.125, 4)
@@ -129,7 +129,7 @@ if latt_info.mpi_rank == 0:
     ax.set_ylabel(r"$m_{\mathrm{eff}}$", **fs_p)
     ax.set_ylim(-3, 4)
     plt.tight_layout()
-    plt.savefig(f"../artifacts/plots/qprop_static_meff_{ensemble}.pdf", transparent=True)
+    plt.savefig(f"artifacts/plots/qprop_static_meff_{ensemble}.pdf", transparent=True)
     plt.show()
 
 # %%
