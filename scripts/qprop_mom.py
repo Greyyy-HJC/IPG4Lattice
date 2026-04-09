@@ -56,59 +56,60 @@ if is_root:
     print("Averaging over source positions:", source_positions)
 
 # Lists to store correlation functions
-for gamma_name, gamma_matrix in zip(["I", "gX", "gY", "gZ", "gT"], [I, gX, gY, gZ, gT]):
-    point_quark_corr_z = []
-    point_quark_corr_t = []
+gamma_ops = [("I", I), ("gX", gX), ("gY", gY), ("gZ", gZ), ("gT", gT)]
+point_quark_corr_t_by_gamma = {gamma_name: [] for gamma_name, _ in gamma_ops}
 
-    for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
-        
-        if ensemble == "S16T16":
-            gauge = io.readNERSCGauge(f"ensemble/S16T16/wilson_b6.{cfg}")
-        elif ensemble == "S16T16_cg":
-            gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
-        elif ensemble == "S16T16_cg_ipg":
-            gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
-        
-        # Apply smearing to gauge field
-        # gauge.stoutSmear(1, 0.125, 4)
+for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
+    if ensemble == "S16T16":
+        gauge = io.readNERSCGauge(f"ensemble/S16T16/wilson_b6.{cfg}")
+    elif ensemble == "S16T16_cg":
+        gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
+    elif ensemble == "S16T16_cg_ipg":
+        gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
 
-        with dirac.useGauge(gauge):
-            cfg_point_quark_corr_t = []
+    # Apply smearing to gauge field
+    # gauge.stoutSmear(1, 0.125, 4)
 
-            for src_position in source_positions:
-                src_x, src_y, src_z, src_t = src_position
-                point_source = source.propagator(latt_info, "point", src_position)
-                point_propag = core.invertPropagator(dirac, point_source)
+    with dirac.useGauge(gauge):
+        cfg_point_quark_corr_t_by_gamma = {gamma_name: [] for gamma_name, _ in gamma_ops}
 
+        for src_position in source_positions:
+            point_source = source.propagator(latt_info, "point", src_position)
+            point_propag = core.invertPropagator(dirac, point_source)
+
+            for gamma_name, gamma_matrix in gamma_ops:
                 # Gather the point-source correlator in [t, z, y, x] order.
                 point_quark_corr_4d = core.gatherLattice(
                     contract(
                         "pwtzyx,wtzyxijaa,ji->pt",
                         momentum_phases,
                         point_propag.data,
-                        gamma_matrix).get(),
+                        gamma_matrix,
+                    ).get(),
                     [1, -1, -1, -1],
                 )
 
                 if is_root:
-                    cfg_point_quark_corr_t.append(point_quark_corr_4d)
+                    cfg_point_quark_corr_t_by_gamma[gamma_name].append(point_quark_corr_4d)
 
-            if is_root:
-                point_quark_corr_t.append(np.mean(cfg_point_quark_corr_t, axis=0))
+        if is_root:
+            for gamma_name in cfg_point_quark_corr_t_by_gamma:
+                point_quark_corr_t_by_gamma[gamma_name].append(
+                    np.mean(cfg_point_quark_corr_t_by_gamma[gamma_name], axis=0)
+                )
 
-
-    if is_root:
-        point_quark_corr_t = np.asarray(point_quark_corr_t)
+if is_root:
+    for gamma_name in [name for name, _ in gamma_ops]:
+        point_quark_corr_t = np.asarray(point_quark_corr_t_by_gamma[gamma_name])
         print("max |Im point_quark_corr_t|: ", np.max(np.abs(np.imag(point_quark_corr_t))))
         point_quark_corr_t = np.real(point_quark_corr_t)
-        print("shape of point_quark_corr_t: ", np.shape(point_quark_corr_t)) # Should be (N_sample, len(momentum_list), Lt)
+        print("shape of point_quark_corr_t: ", np.shape(point_quark_corr_t))  # (N_sample, len(momentum_list), Lt)
 
         point_quark_corr_t_jk = jackknife(point_quark_corr_t)
         point_quark_corr_t_jk_avg = jk_ls_avg(point_quark_corr_t_jk)
 
         fig, ax = default_plot()
         for idx, label in enumerate(momentum_label):
-
             point_meff_t = pt2_to_meff(point_quark_corr_t_jk_avg[idx], boundary="none")
 
             ax.errorbar(
