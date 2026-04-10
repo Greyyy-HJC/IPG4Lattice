@@ -37,49 +37,54 @@ latt_info = core.LatticeInfo(latt_size, -1, xi_0 / nu)
 dirac = core.getClover(latt_info, mass, 1e-8, 10000, xi_0, csw_r, csw_t, multigrid)
 is_root = latt_info.mpi_rank == 0
 
-# Get gamma5 matrix
 I = gamma.gamma(0)
 gX = gamma.gamma(1)
 gY = gamma.gamma(2)
 gZ = gamma.gamma(4)
 gT = gamma.gamma(8)
 
-# Momentum phases
+gamma_ops = [("I", I), ("gX", gX), ("gY", gY), ("gZ", gZ), ("gT", gT)]
+
+# 4-momenta: spatial × temporal (temporal up to T/2 for better pole-mass fit)
 spatial_momenta = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [1, 1, 1], [0, 0, 2]]
-temporal_momenta = [0, 1, 2]
+temporal_momenta = list(range(latt_size[3] // 2 + 1))  # 0 .. T/2
 momentum_list = [[px, py, pz, pt] for px, py, pz in spatial_momenta for pt in temporal_momenta]
 momentum_label = [f"({px},{py},{pz},{pt})" for px, py, pz, pt in momentum_list]
-momentum_phases = MomentumPhase(latt_info).getPhases(momentum_list)
+mom_phase = MomentumPhase(latt_info)
 
-# Source positions
-source_positions = [[0, 0, 0, 0]]
+N_src = 4
+rng = np.random.RandomState(42)
 if is_root:
-    print("Averaging over source positions:", source_positions)
+    print(f"Using {N_src} random source positions per config, temporal momenta n4 = {temporal_momenta}")
 
-# Lists to store correlation functions
-for gamma_name, gamma_matrix in zip(["I"], [I]):
-    point_quark_greens = []
+# Accumulate per-gamma Green's functions across configurations
+point_quark_greens_by_gamma = {name: [] for name, _ in gamma_ops}
 
-    for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
-        
-        if ensemble == "S16T16":
-            gauge = io.readNERSCGauge(f"ensemble/S16T16/wilson_b6.{cfg}")
-        elif ensemble == "S16T16_cg":
-            gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
-        elif ensemble == "S16T16_cg_ipg":
-            gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
-        
-        # Apply smearing to gauge field
-        # gauge.stoutSmear(1, 0.125, 4)
+for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
 
-        with dirac.useGauge(gauge):
-            cfg_point_quark_greens = []
+    if ensemble == "S16T16":
+        gauge = io.readNERSCGauge(f"ensemble/S16T16/wilson_b6.{cfg}")
+    elif ensemble == "S16T16_cg":
+        gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
+    elif ensemble == "S16T16_cg_ipg":
+        gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
 
-            for src_position in source_positions:
-                src_x, src_y, src_z, src_t = src_position
-                point_source = source.propagator(latt_info, "point", src_position)
-                point_propag = core.invertPropagator(dirac, point_source)
+    # gauge.stoutSmear(1, 0.125, 4)
 
+    # source_positions = rng.randint(0, latt_size, size=(N_src, 4)).tolist()
+    source_positions = [[0, 0, 0, 0]] # todo
+
+    with dirac.useGauge(gauge):
+        cfg_greens_by_gamma = {name: [] for name, _ in gamma_ops}
+
+        for src_position in source_positions:
+            # Phase kernel e^{ip·(x - y)} with automatic source-position correction
+            momentum_phases = mom_phase.getPhases(momentum_list, x0=src_position)
+
+            point_source = source.propagator(latt_info, "point", src_position)
+            point_propag = core.invertPropagator(dirac, point_source)
+
+            for gamma_name, gamma_matrix in gamma_ops:
                 point_quark_green = contract(
                     "pwtzyx,wtzyxijaa,ji->p",
                     momentum_phases,
@@ -88,33 +93,61 @@ for gamma_name, gamma_matrix in zip(["I"], [I]):
                 ).get()
 
                 if is_root:
-                    cfg_point_quark_greens.append(point_quark_green)
+                    cfg_greens_by_gamma[gamma_name].append(point_quark_green)
 
-            if is_root:
-                point_quark_greens.append(np.mean(cfg_point_quark_greens, axis=0))
+        if is_root:
+            for gamma_name in cfg_greens_by_gamma:
+                point_quark_greens_by_gamma[gamma_name].append(
+                    np.mean(cfg_greens_by_gamma[gamma_name], axis=0)
+                )
 
 
-    if is_root:
-        point_quark_greens = np.asarray(point_quark_greens)
-        print("max |Im point_quark_greens|: ", np.max(np.abs(np.imag(point_quark_greens))))
-        point_quark_greens = np.real(point_quark_greens)
-        print("shape of point_quark_greens: ", np.shape(point_quark_greens)) # Should be (N_sample, len(momentum_list))
+# %%
+if is_root:
+    # Cache complex Green's functions for all gammas
+    cache_dict = dict(
+        momentum_list=np.asarray(momentum_list),
+        momentum_label=np.asarray(momentum_label),
+        latt_size=np.asarray(latt_size),
+    )
+    for gamma_name in [name for name, _ in gamma_ops]:
+        cache_dict[gamma_name] = np.asarray(point_quark_greens_by_gamma[gamma_name])
 
-        point_quark_greens_jk = jackknife(point_quark_greens)
-        point_quark_greens_jk_avg = jk_ls_avg(point_quark_greens_jk)
+    os.makedirs("artifacts/data", exist_ok=True)
+    np.savez(f"artifacts/data/qprop_greens_{ensemble}.npz", **cache_dict)
+    print(f"Cached to artifacts/data/qprop_greens_{ensemble}.npz")
+
+    # Plot each gamma separately
+    for gamma_name in [name for name, _ in gamma_ops]:
+        greens = np.asarray(point_quark_greens_by_gamma[gamma_name])
+        greens_re = np.real(greens)
+        greens_im = np.imag(greens)
+
+        greens_re_jk_avg = jk_ls_avg(jackknife(greens_re))
+        greens_im_jk_avg = jk_ls_avg(jackknife(greens_im))
+
+        x_values = np.arange(len(momentum_label))
 
         fig, ax = default_plot()
-        x_values = np.arange(len(momentum_label))
         ax.errorbar(
             x_values,
-            gv.mean(point_quark_greens_jk_avg),
-            yerr=gv.sdev(point_quark_greens_jk_avg),
+            gv.mean(greens_re_jk_avg),
+            yerr=gv.sdev(greens_re_jk_avg),
+            label=r"$\mathrm{Re}$",
+            **errorb,
+        )
+        ax.errorbar(
+            x_values + 0.15,
+            gv.mean(greens_im_jk_avg),
+            yerr=gv.sdev(greens_im_jk_avg),
+            label=r"$\mathrm{Im}$",
             **errorb,
         )
         ax.set_xticks(x_values)
         ax.set_xticklabels(momentum_label, rotation=45, ha="right")
         ax.set_xlabel(r"$(p_x, p_y, p_z, p_t)$", **fs_p)
-        ax.set_ylabel(r"$\mathrm{Re}\, G(p)$", **fs_p)
+        ax.set_ylabel(rf"$G_{{\Gamma={gamma_name}}}(p)$", **fs_p)
+        ax.legend(**fs_small_p)
         plt.tight_layout()
         plt.savefig(f"artifacts/plots/qprop_greens_{ensemble}_{gamma_name}.pdf", transparent=True)
         plt.show()

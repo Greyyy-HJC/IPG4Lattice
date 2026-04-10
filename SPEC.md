@@ -103,8 +103,15 @@ max_t ||u'(t) - u'(0)|| < 1e-10
   - `residual`: maximum violation of `g(t) u(t) g†(t+1) = C` must be below `--boundary-tol`.
   - `reconstruct`: maximum link-wise difference between the written CG+IPG gauge and the gauge reconstructed from the original CG gauge must be below `--reconstruct-tol`.
   - Default tolerances are `1e-10` for all three thresholds.
-  - Quark-propagator agreement checks (coordinate-space spatial propagator, temporal propagator, momentum-projected Green's functions) are carried out as supplementary physics sanity checks via `scripts/qprop_static.py`, `scripts/qprop_mom.py`, and `scripts/qprop_greens.py`.
+  - Quark-propagator agreement checks (temporal propagator, momentum-projected correlator, momentum-space Green's functions) are carried out as supplementary physics sanity checks via `scripts/qprop_static.py`, `scripts/qprop_mom.py`, and `scripts/qprop_greens.py`.
+
+## Cached analysis data
+
+The quark-propagator scripts cache their raw per-configuration results in `artifacts/data/` so that downstream analyses can reuse them without rerunning inversions:
+
+- `artifacts/data/qprop_static_{ensemble}.npz`: wall-source tdir correlator `wall_quark_corr_t` (shape `N_conf × Lt`, real) and point-source zdir correlator `point_quark_corr_z` (shape `N_conf × Lz`, real).
+- `artifacts/data/qprop_greens_{ensemble}.npz`: complex Green's function arrays keyed by gamma name (`I`, `gX`, `gY`, `gZ`, `gT`), each of shape `(N_conf, n_mom)`, plus `momentum_list`, `momentum_label`, and `latt_size`.
 
 ## Notes
-- The residual IPG transform is spatially constant on each time slice, so the working expectation is that the CG-sensitive spatial propagator should remain unchanged after IPG.
+- IPG only constrains the spatially-averaged temporal links `u(t)`. Consequently, only the spatially-averaged time-direction quark propagator (wall source → spatial-sum sink) carries a clean signal after IPG. This motivates the wall-source choice in `qprop_static.py`.
 - `scripts/ipg_utils.py` uses `scipy.linalg.logm/expm` to build the matrix `T`-th root and then projects the result back to `SU(3)` to control numerical drift.

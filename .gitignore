@@ -8,3 +8,5 @@ ensemble/
 .cache/
 scripts/.cache/
 scripts/__pycache__/
+
+artifacts/data/
