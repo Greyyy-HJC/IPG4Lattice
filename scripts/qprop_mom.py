@@ -51,7 +51,10 @@ momentum_label = ["000", "111", "002", "222"]
 momentum_phases = MomentumPhase(latt_info).getPhases(momentum_list)
 
 gamma_ops = [("I", I), ("gX", gX), ("gY", gY), ("gZ", gZ), ("gT", gT)]
-point_quark_corr_t_by_gamma = {gamma_name: [] for gamma_name, _ in gamma_ops}
+# Use momentum wall sources: one inversion per momentum, L^3 better statistics
+# than a single point source. Especially important for the IPG ensemble where
+# IPG constrains spatially-averaged links — the wall-source signal is much cleaner.
+wall_quark_corr_t_by_gamma = {gamma_name: [] for gamma_name, _ in gamma_ops}
 
 for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
     if ensemble == "S16T16":
@@ -64,26 +67,42 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
     # gauge.stoutSmear(1, 0.125, 4)
 
     with dirac.useGauge(gauge):
-        point_source = source.propagator(latt_info, "point", [0, 0, 0, 0])
-        point_propag = core.invertPropagator(dirac, point_source)
+        # One wall-source inversion per momentum.
+        # Source phase: exp(-ip·x_src), sink phase: exp(+ip·x_snk).
+        # By translation invariance this equals L^3 * C_point(t, p), with
+        # sqrt(L^3) better SNR due to averaging over all spatial source sites.
+        cfg_corr = {gamma_name: [] for gamma_name, _ in gamma_ops}
 
-        for gamma_name, gamma_matrix in gamma_ops:
-            point_quark_corr_4d = core.gatherLattice(
-                contract(
-                    "pwtzyx,wtzyxijaa,ji->pt",
-                    momentum_phases,
-                    point_propag.data,
-                    gamma_matrix,
-                ).get(),
-                [1, -1, -1, -1],
-            )
+        for p_phase in momentum_phases:
+            wall_source = source.propagator(latt_info, "wall", 0,
+                                            source_phase=np.conj(p_phase))
+            wall_propag = core.invertPropagator(dirac, wall_source)
 
-            if is_root:
-                point_quark_corr_t_by_gamma[gamma_name].append(point_quark_corr_4d)
+            for gamma_name, gamma_matrix in gamma_ops:
+                # p_phase[None] adds a dummy p-axis so gatherLattice (which
+                # needs at least a 2D input for axis-1 time gathering) works.
+                corr_t = core.gatherLattice(
+                    contract(
+                        "pwtzyx,wtzyxijaa,ji->pt",
+                        p_phase[None],
+                        wall_propag.data,
+                        gamma_matrix,
+                    ).get(),
+                    [1, -1, -1, -1],
+                )[0]  # remove dummy p-axis
+                if is_root:
+                    cfg_corr[gamma_name].append(corr_t)
+
+        if is_root:
+            for gamma_name in cfg_corr:
+                # stack to shape (n_mom, Lt) then accumulate over configs
+                wall_quark_corr_t_by_gamma[gamma_name].append(
+                    np.stack(cfg_corr[gamma_name])
+                )
 
 if is_root:
     for gamma_name in [name for name, _ in gamma_ops]:
-        point_quark_corr_t = np.asarray(point_quark_corr_t_by_gamma[gamma_name])
+        point_quark_corr_t = np.asarray(wall_quark_corr_t_by_gamma[gamma_name])
         print("max |Im point_quark_corr_t|: ", np.max(np.abs(np.imag(point_quark_corr_t))))
         point_quark_corr_t = np.real(point_quark_corr_t)
         print("shape of point_quark_corr_t: ", np.shape(point_quark_corr_t))  # (N_conf, n_mom, Lt)

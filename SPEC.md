@@ -113,5 +113,5 @@ The quark-propagator scripts cache their raw per-configuration results in `artif
 - `artifacts/data/qprop_greens_{ensemble}.npz`: complex Green's function arrays keyed by gamma name (`I`, `gX`, `gY`, `gZ`, `gT`), each of shape `(N_conf, n_mom)`, plus `momentum_list`, `momentum_label`, and `latt_size`.
 
 ## Notes
-- IPG only constrains the spatially-averaged temporal links `u(t)`. Consequently, only the spatially-averaged time-direction quark propagator (wall source → spatial-sum sink) carries a clean signal after IPG. This motivates the wall-source choice in `qprop_static.py`.
+- IPG only constrains the spatially-averaged temporal links `u(t)`. Consequently, only the spatially-averaged time-direction quark propagator (wall source → spatial-sum sink) carries a clean signal after IPG. This motivates the wall-source choice in both `qprop_static.py` and `qprop_mom.py`. In `qprop_mom.py` a momentum wall source (wall × exp(±ip·x) phase) is used for each momentum, giving L³ better statistics than a single point source at the cost of one inversion per momentum.
 - `scripts/ipg_utils.py` uses `scipy.linalg.logm/expm` to build the matrix `T`-th root and then projects the result back to `SU(3)` to control numerical drift.
