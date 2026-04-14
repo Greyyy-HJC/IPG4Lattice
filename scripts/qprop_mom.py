@@ -74,22 +74,19 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
         cfg_corr = {gamma_name: [] for gamma_name, _ in gamma_ops}
 
         for p_phase in momentum_phases:
-            wall_source = source.propagator(latt_info, "wall", 0,
-                                            source_phase=np.conj(p_phase))
+            wall_source = source.propagator(latt_info, "wall", 0, source_phase=np.conj(p_phase))
             wall_propag = core.invertPropagator(dirac, wall_source)
 
             for gamma_name, gamma_matrix in gamma_ops:
-                # p_phase[None] adds a dummy p-axis so gatherLattice (which
-                # needs at least a 2D input for axis-1 time gathering) works.
                 corr_t = core.gatherLattice(
                     contract(
-                        "pwtzyx,wtzyxijaa,ji->pt",
-                        p_phase[None],
+                        "wtzyx,wtzyxijaa,ji->t",
+                        p_phase,
                         wall_propag.data,
                         gamma_matrix,
                     ).get(),
-                    [1, -1, -1, -1],
-                )[0]  # remove dummy p-axis
+                    [0, -1, -1, -1],
+                ) 
                 if is_root:
                     cfg_corr[gamma_name].append(corr_t)
 
