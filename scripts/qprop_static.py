@@ -64,7 +64,7 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
             core.lexico(contract(
                 "wtzyxijaa,ji->wtzyx",
                 point_propag.data,
-                I).real.get(),
+                I).get(),
             [0, 1, 2, 3, 4]),
             [0, 1, 2, 3],
         )
@@ -77,7 +77,7 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
             core.lexico(contract(
                 "wtzyxijaa,ji->wtzyx",
                 wall_propag.data,
-                I).real.get(),
+                I).get(),
             [0, 1, 2, 3, 4]),
             [0, 1, 2, 3],
         )
@@ -103,35 +103,64 @@ if is_root:
     )
     print(f"Cached to artifacts/data/qprop_static_{ensemble}.npz")
 
-    point_quark_corr_z_jk_avg = jk_ls_avg(jackknife(point_quark_corr_z))
-    wall_quark_corr_t_jk_avg = jk_ls_avg(jackknife(wall_quark_corr_t))
+    point_quark_corr_z_re_jk_avg = jk_ls_avg(jackknife(np.real(point_quark_corr_z)))
+    point_quark_corr_z_norm_jk_avg = jk_ls_avg(jackknife(np.abs(point_quark_corr_z)))
+    wall_quark_corr_t_re_jk_avg = jk_ls_avg(jackknife(np.real(wall_quark_corr_t)))
+    wall_quark_corr_t_norm_jk_avg = jk_ls_avg(jackknife(np.abs(wall_quark_corr_t)))
 
-    fig, ax = default_plot()
+    fig_re, ax_re = default_plot()
+    fig_norm, ax_norm = default_plot()
 
-    point_meff_z = pt2_to_meff(point_quark_corr_z_jk_avg, boundary="none")
-    ax.errorbar(
-        np.arange(len(point_meff_z)),
-        gv.mean(point_meff_z),
-        yerr=gv.sdev(point_meff_z),
+    point_meff_z_re = pt2_to_meff(point_quark_corr_z_re_jk_avg, boundary="none")
+    ax_re.errorbar(
+        np.arange(len(point_meff_z_re)),
+        gv.mean(point_meff_z_re),
+        yerr=gv.sdev(point_meff_z_re),
         label="zdir_000",
         **errorb,
     )
 
-    wall_meff_t = pt2_to_meff(wall_quark_corr_t_jk_avg, boundary="periodic")
-    ax.errorbar(
-        np.arange(len(wall_meff_t)),
-        gv.mean(wall_meff_t),
-        yerr=gv.sdev(wall_meff_t),
+    point_meff_z_norm = pt2_to_meff(point_quark_corr_z_norm_jk_avg, boundary="none")
+    ax_norm.errorbar(
+        np.arange(len(point_meff_z_norm)),
+        gv.mean(point_meff_z_norm),
+        yerr=gv.sdev(point_meff_z_norm),
+        label="zdir_000",
+        **errorb,
+    )
+
+    wall_meff_t_re = pt2_to_meff(wall_quark_corr_t_re_jk_avg, boundary="periodic")
+    ax_re.errorbar(
+        np.arange(len(wall_meff_t_re)),
+        gv.mean(wall_meff_t_re),
+        yerr=gv.sdev(wall_meff_t_re),
         label="tdir_000",
         **errorb,
     )
 
-    ax.legend(ncol=2, **fs_small_p)
-    ax.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
-    ax.set_ylabel(r"$m_{\mathrm{eff}}$", **fs_p)
-    ax.set_ylim(-3, 4)
-    plt.tight_layout()
-    plt.savefig(f"artifacts/plots/qprop_static_meff_{ensemble}.pdf", transparent=True)
+    wall_meff_t_norm = pt2_to_meff(wall_quark_corr_t_norm_jk_avg, boundary="periodic")
+    ax_norm.errorbar(
+        np.arange(len(wall_meff_t_norm)),
+        gv.mean(wall_meff_t_norm),
+        yerr=gv.sdev(wall_meff_t_norm),
+        label="tdir_000",
+        **errorb,
+    )
+
+    ax_re.legend(ncol=2, **fs_small_p)
+    ax_re.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
+    ax_re.set_ylabel(r"$m_{\mathrm{eff}}^{\mathrm{Re}}$", **fs_p)
+    ax_re.set_ylim(-3, 4)
+    fig_re.tight_layout()
+    fig_re.savefig(f"artifacts/plots/qprop_static_meff_re_{ensemble}.pdf", transparent=True)
+    plt.show()
+
+    ax_norm.legend(ncol=2, **fs_small_p)
+    ax_norm.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
+    ax_norm.set_ylabel(r"$m_{\mathrm{eff}}^{\mathrm{Norm}}$", **fs_p)
+    ax_norm.set_ylim(-3, 4)
+    fig_norm.tight_layout()
+    fig_norm.savefig(f"artifacts/plots/qprop_static_meff_norm_{ensemble}.pdf", transparent=True)
     plt.show()
 
 # %%

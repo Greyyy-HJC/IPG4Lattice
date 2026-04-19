@@ -72,6 +72,7 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
             point_quark_corr_z.append(point_quark_corr_4d[0, :, 0, 0])  # t z y x
             # Point source at the origin, summed over spatial sinks for each t.
             point_quark_corr_t.append(point_quark_corr_4d.sum(axis=(1, 2, 3)))
+            # point_quark_corr_t.append(point_quark_corr_4d[:, 0, 0, 0])
 
 
 if is_root:

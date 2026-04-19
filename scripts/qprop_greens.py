@@ -122,9 +122,11 @@ if is_root:
         greens = np.asarray(point_quark_greens_by_gamma[gamma_name])
         greens_re = np.real(greens)
         greens_im = np.imag(greens)
+        greens_norm = np.abs(greens)
 
         greens_re_jk_avg = jk_ls_avg(jackknife(greens_re))
         greens_im_jk_avg = jk_ls_avg(jackknife(greens_im))
+        greens_norm_jk_avg = jk_ls_avg(jackknife(greens_norm))
 
         x_values = np.arange(len(momentum_label))
 
@@ -141,6 +143,13 @@ if is_root:
             gv.mean(greens_im_jk_avg),
             yerr=gv.sdev(greens_im_jk_avg),
             label=r"$\mathrm{Im}$",
+            **errorb,
+        )
+        ax.errorbar(
+            x_values + 0.30,
+            gv.mean(greens_norm_jk_avg),
+            yerr=gv.sdev(greens_norm_jk_avg),
+            label=r"$\mathrm{Norm}$",
             **errorb,
         )
         ax.set_xticks(x_values)

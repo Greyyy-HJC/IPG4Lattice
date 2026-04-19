@@ -100,31 +100,55 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
 if is_root:
     for gamma_name in [name for name, _ in gamma_ops]:
         point_quark_corr_t = np.asarray(wall_quark_corr_t_by_gamma[gamma_name])
+        point_quark_corr_t_re = np.real(point_quark_corr_t)
+        point_quark_corr_t_norm = np.abs(point_quark_corr_t)
         print("max |Im point_quark_corr_t|: ", np.max(np.abs(np.imag(point_quark_corr_t))))
-        point_quark_corr_t = np.real(point_quark_corr_t)
         print("shape of point_quark_corr_t: ", np.shape(point_quark_corr_t))  # (N_conf, n_mom, Lt)
 
-        point_quark_corr_t_jk = jackknife(point_quark_corr_t)
-        point_quark_corr_t_jk_avg = jk_ls_avg(point_quark_corr_t_jk)
+        point_quark_corr_t_re_jk_avg = jk_ls_avg(jackknife(point_quark_corr_t_re))
+        point_quark_corr_t_norm_jk_avg = jk_ls_avg(jackknife(point_quark_corr_t_norm))
 
-        fig, ax = default_plot()
+        fig_re, ax_re = default_plot()
+        fig_norm, ax_norm = default_plot()
         for idx, label in enumerate(momentum_label):
-            point_meff_t = pt2_to_meff(point_quark_corr_t_jk_avg[idx], boundary="none")
+            point_meff_t_re = pt2_to_meff(point_quark_corr_t_re_jk_avg[idx], boundary="none")
+            point_meff_t_norm = pt2_to_meff(point_quark_corr_t_norm_jk_avg[idx], boundary="none")
 
-            ax.errorbar(
-                np.arange(len(point_meff_t)),
-                gv.mean(point_meff_t),
-                yerr=gv.sdev(point_meff_t),
+            ax_re.errorbar(
+                np.arange(len(point_meff_t_re)),
+                gv.mean(point_meff_t_re),
+                yerr=gv.sdev(point_meff_t_re),
+                label="tdir_" + label,
+                **errorb,
+            )
+            ax_norm.errorbar(
+                np.arange(len(point_meff_t_norm)),
+                gv.mean(point_meff_t_norm),
+                yerr=gv.sdev(point_meff_t_norm),
                 label="tdir_" + label,
                 **errorb,
             )
 
-        ax.legend(ncol=2, **fs_small_p)
-        ax.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
-        ax.set_ylabel(r"$m_{\mathrm{eff}}$", **fs_p)
-        ax.set_ylim(-2, 4)
-        plt.tight_layout()
-        plt.savefig(f"artifacts/plots/qprop_mom_tdir_meff_{ensemble}_{gamma_name}.pdf", transparent=True)
+        ax_re.legend(ncol=2, **fs_small_p)
+        ax_re.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
+        ax_re.set_ylabel(r"$m_{\mathrm{eff}}^{\mathrm{Re}}$", **fs_p)
+        ax_re.set_ylim(-2, 4)
+        fig_re.tight_layout()
+        fig_re.savefig(
+            f"artifacts/plots/qprop_mom_tdir_meff_re_{ensemble}_{gamma_name}.pdf",
+            transparent=True,
+        )
+        plt.show()
+
+        ax_norm.legend(ncol=2, **fs_small_p)
+        ax_norm.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
+        ax_norm.set_ylabel(r"$m_{\mathrm{eff}}^{\mathrm{Norm}}$", **fs_p)
+        ax_norm.set_ylim(-2, 4)
+        fig_norm.tight_layout()
+        fig_norm.savefig(
+            f"artifacts/plots/qprop_mom_tdir_meff_norm_{ensemble}_{gamma_name}.pdf",
+            transparent=True,
+        )
         plt.show()
 
 # %%
