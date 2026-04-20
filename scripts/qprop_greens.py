@@ -50,6 +50,7 @@ spatial_momenta = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [1, 1, 1], [0, 0, 2]]
 temporal_momenta = list(range(latt_size[3] // 2 + 1))  # 0 .. T/2
 momentum_list = [[px, py, pz, pt] for px, py, pz in spatial_momenta for pt in temporal_momenta]
 momentum_label = [f"({px},{py},{pz},{pt})" for px, py, pz, pt in momentum_list]
+momentum_array = np.asarray(momentum_list, dtype=np.float64)
 mom_phase = MomentumPhase(latt_info)
 
 N_src = 4
@@ -59,6 +60,7 @@ if is_root:
 
 # Accumulate per-gamma Green's functions across configurations
 point_quark_greens_by_gamma = {name: [] for name, _ in gamma_ops}
+point_quark_greens_by_gamma["pDotg"] = []
 
 for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
 
@@ -96,10 +98,17 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
                     cfg_greens_by_gamma[gamma_name].append(point_quark_green)
 
         if is_root:
-            for gamma_name in cfg_greens_by_gamma:
-                point_quark_greens_by_gamma[gamma_name].append(
-                    np.mean(cfg_greens_by_gamma[gamma_name], axis=0)
-                )
+            cfg_mean_by_gamma = {
+                gamma_name: np.mean(cfg_greens_by_gamma[gamma_name], axis=0)
+                for gamma_name in cfg_greens_by_gamma
+            }
+            cfg_mean_by_gamma["pDotg"] = (
+                momentum_array[:, 0] * cfg_mean_by_gamma["gX"]
+                + momentum_array[:, 1] * cfg_mean_by_gamma["gY"]
+                + momentum_array[:, 2] * cfg_mean_by_gamma["gZ"]
+            )
+            for gamma_name in cfg_mean_by_gamma:
+                point_quark_greens_by_gamma[gamma_name].append(cfg_mean_by_gamma[gamma_name])
 
 
 # %%
@@ -110,7 +119,7 @@ if is_root:
         momentum_label=np.asarray(momentum_label),
         latt_size=np.asarray(latt_size),
     )
-    for gamma_name in [name for name, _ in gamma_ops]:
+    for gamma_name in point_quark_greens_by_gamma:
         cache_dict[gamma_name] = np.asarray(point_quark_greens_by_gamma[gamma_name])
 
     os.makedirs("artifacts/data", exist_ok=True)
@@ -118,7 +127,7 @@ if is_root:
     print(f"Cached to artifacts/data/qprop_greens_{ensemble}.npz")
 
     # Plot each gamma separately
-    for gamma_name in [name for name, _ in gamma_ops]:
+    for gamma_name in point_quark_greens_by_gamma:
         greens = np.asarray(point_quark_greens_by_gamma[gamma_name])
         greens_re = np.real(greens)
         greens_im = np.imag(greens)

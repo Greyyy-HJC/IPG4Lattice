@@ -48,6 +48,7 @@ gT = gamma.gamma(8)
 # agrees with qprop_static's tdir (absolute value differs by L^3).
 momentum_list = [[0, 0, 0], [1, 1, 1], [0, 0, 2], [2, 2, 2]]
 momentum_label = ["000", "111", "002", "222"]
+momentum_array = np.asarray(momentum_list, dtype=np.float64)
 momentum_phases = MomentumPhase(latt_info).getPhases(momentum_list)
 
 gamma_ops = [("I", I), ("gX", gX), ("gY", gY), ("gZ", gZ), ("gT", gT)]
@@ -55,6 +56,7 @@ gamma_ops = [("I", I), ("gX", gX), ("gY", gY), ("gZ", gZ), ("gT", gT)]
 # than a single point source. Especially important for the IPG ensemble where
 # IPG constrains spatially-averaged links — the wall-source signal is much cleaner.
 wall_quark_corr_t_by_gamma = {gamma_name: [] for gamma_name, _ in gamma_ops}
+wall_quark_corr_t_by_gamma["pDotg"] = []
 
 for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
     if ensemble == "S16T16":
@@ -91,6 +93,13 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
                     cfg_corr[gamma_name].append(corr_t)
 
         if is_root:
+            # C_{p·g}(p,t) = p_x C_{gX}(p,t) + p_y C_{gY}(p,t) + p_z C_{gZ}(p,t)
+            cfg_corr["pDotg"] = [
+                momentum_array[idx, 0] * cfg_corr["gX"][idx]
+                + momentum_array[idx, 1] * cfg_corr["gY"][idx]
+                + momentum_array[idx, 2] * cfg_corr["gZ"][idx]
+                for idx in range(len(momentum_list))
+            ]
             for gamma_name in cfg_corr:
                 # stack to shape (n_mom, Lt) then accumulate over configs
                 wall_quark_corr_t_by_gamma[gamma_name].append(
@@ -98,7 +107,33 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
                 )
 
 if is_root:
-    for gamma_name in [name for name, _ in gamma_ops]:
+    os.makedirs("artifacts/data", exist_ok=True)
+    np.savez(
+        f"artifacts/data/qprop_mom_{ensemble}.npz",
+        **{
+            gamma_name: np.asarray(wall_quark_corr_t_by_gamma[gamma_name])
+            for gamma_name in wall_quark_corr_t_by_gamma
+        },
+        momentum_list=np.asarray(momentum_list),
+        momentum_label=np.asarray(momentum_label),
+        latt_size=np.asarray(latt_size),
+    )
+    print(f"Cached to artifacts/data/qprop_mom_{ensemble}.npz")
+
+    def safe_pt2_to_meff(pt2_array, gamma_name, mom_label):
+        try:
+            return pt2_to_meff(pt2_array, boundary="periodic")
+        except ZeroDivisionError:
+            # Keep plotting/saving even when neighboring points contain zeros.
+            # Matplotlib skips NaNs instead of terminating the whole run.
+            print(
+                f"[WARN] ZeroDivision in pt2_to_meff for {gamma_name}, p={mom_label}; "
+                "filling with NaN."
+            )
+            n_t = len(pt2_array)
+            return gv.gvar(np.full(n_t, np.nan), np.full(n_t, np.nan))
+
+    for gamma_name in wall_quark_corr_t_by_gamma:
         point_quark_corr_t = np.asarray(wall_quark_corr_t_by_gamma[gamma_name])
         point_quark_corr_t_re = np.real(point_quark_corr_t)
         point_quark_corr_t_norm = np.abs(point_quark_corr_t)
@@ -111,8 +146,10 @@ if is_root:
         fig_re, ax_re = default_plot()
         fig_norm, ax_norm = default_plot()
         for idx, label in enumerate(momentum_label):
-            point_meff_t_re = pt2_to_meff(point_quark_corr_t_re_jk_avg[idx], boundary="none")
-            point_meff_t_norm = pt2_to_meff(point_quark_corr_t_norm_jk_avg[idx], boundary="none")
+            point_meff_t_re = safe_pt2_to_meff(point_quark_corr_t_re_jk_avg[idx], gamma_name, label)
+            point_meff_t_norm = safe_pt2_to_meff(
+                point_quark_corr_t_norm_jk_avg[idx], gamma_name, label
+            )
 
             ax_re.errorbar(
                 np.arange(len(point_meff_t_re)),
