@@ -19,7 +19,7 @@ if not os.path.exists(".cache"):
     print("Created .cache directory for PyQUDA resources")
 
 
-ensemble = "S16T16_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg"
+ensemble = "S32T32_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S32T32_cg_ipg"
 
 
 init([1, 1, 1, 1], resource_path=".cache")
@@ -32,7 +32,7 @@ csw_r = 1.02868
 csw_t = 1.02868
 multigrid = None # [[4, 4, 4, 4], [2, 2, 2, 8]]
 
-latt_size = [16, 16, 16, 16]
+latt_size = [32, 32, 32, 32]
 latt_info = core.LatticeInfo(latt_size, -1, xi_0 / nu)
 dirac = core.getClover(latt_info, mass, 1e-8, 10000, xi_0, csw_r, csw_t, multigrid)
 is_root = latt_info.mpi_rank == 0
@@ -46,8 +46,8 @@ gT = gamma.gamma(8)
 gamma_ops = [("I", I), ("gX", gX), ("gY", gY), ("gZ", gZ), ("gT", gT)]
 
 # 4-momenta: spatial × temporal (temporal up to T/2 for better pole-mass fit)
-spatial_momenta = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [1, 1, 1], [0, 0, 2]]
-temporal_momenta = list(range(latt_size[3] // 2 + 1))  # 0 .. T/2
+spatial_momenta = [[0, 0, 0], [2, 2, 2], [4, 4, 4], [6, 6, 6]]
+temporal_momenta = [0, 2, 4, 6, 8]
 momentum_list = [[px, py, pz, pt] for px, py, pz in spatial_momenta for pt in temporal_momenta]
 momentum_label = [f"({px},{py},{pz},{pt})" for px, py, pz, pt in momentum_list]
 momentum_array = np.asarray(momentum_list, dtype=np.float64)
@@ -70,6 +70,8 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
     elif ensemble == "S16T16_cg_ipg":
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+    elif ensemble == "S32T32_cg_ipg":
+        gauge = io.readNERSCGauge(f"ensemble/S32T32_cg_ipg/gauge/wilson_b5_95_fixed.{cfg}.ipg")
 
     # gauge.stoutSmear(1, 0.125, 4)
 

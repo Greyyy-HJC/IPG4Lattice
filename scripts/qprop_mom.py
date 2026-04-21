@@ -20,7 +20,7 @@ if not os.path.exists(".cache"):
     print("Created .cache directory for PyQUDA resources")
 
 
-ensemble = "S16T16_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg"
+ensemble = "S32T32_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S32T32_cg_ipg"
 
 
 init([1, 1, 1, 1], resource_path=".cache")
@@ -33,7 +33,7 @@ csw_r = 1.02868
 csw_t = 1.02868
 multigrid = None # [[4, 4, 4, 4], [2, 2, 2, 8]]
 
-latt_size = [16, 16, 16, 16]
+latt_size = [32, 32, 32, 32]
 latt_info = core.LatticeInfo(latt_size, -1, xi_0 / nu)
 dirac = core.getClover(latt_info, mass, 1e-8, 10000, xi_0, csw_r, csw_t, multigrid)
 is_root = latt_info.mpi_rank == 0
@@ -46,8 +46,8 @@ gT = gamma.gamma(8)
 
 # Spatial momentum phases (3-momenta); at p=(0,0,0) the effective mass
 # agrees with qprop_static's tdir (absolute value differs by L^3).
-momentum_list = [[0, 0, 0], [1, 1, 1], [0, 0, 2], [2, 2, 2]]
-momentum_label = ["000", "111", "002", "222"]
+momentum_list = [[0, 0, 0], [0, 0, 2], [0, 0, 4], [0, 0, 6], [0, 0, 8]]
+momentum_label = ["(0,0,0)", "(0,0,2)", "(0,0,4)", "(0,0,6)", "(0,0,8)"]
 momentum_array = np.asarray(momentum_list, dtype=np.float64)
 momentum_phases = MomentumPhase(latt_info).getPhases(momentum_list)
 
@@ -65,6 +65,8 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
     elif ensemble == "S16T16_cg_ipg":
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+    elif ensemble == "S32T32_cg_ipg":
+        gauge = io.readNERSCGauge(f"ensemble/S32T32_cg_ipg/gauge/wilson_b5_95_fixed.{cfg}.ipg")
 
     # gauge.stoutSmear(1, 0.125, 4)
 

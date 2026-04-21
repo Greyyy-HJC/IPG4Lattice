@@ -19,7 +19,7 @@ if not os.path.exists(".cache"):
     print("Created .cache directory for PyQUDA resources")
 
 
-ensemble = "S16T16_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg"
+ensemble = "S32T32_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S32T32_cg_ipg"
 
 
 init([1, 1, 1, 1], resource_path=".cache")
@@ -32,7 +32,7 @@ csw_r = 1.02868
 csw_t = 1.02868
 multigrid = None # [[4, 4, 4, 4], [2, 2, 2, 8]]
 
-latt_size = [16, 16, 16, 16]
+latt_size = [32, 32, 32, 32]
 latt_info = core.LatticeInfo(latt_size, -1, xi_0 / nu)
 dirac = core.getClover(latt_info, mass, 1e-8, 10000, xi_0, csw_r, csw_t, multigrid)
 is_root = latt_info.mpi_rank == 0
@@ -52,6 +52,8 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
     elif ensemble == "S16T16_cg_ipg":
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+    elif ensemble == "S32T32_cg_ipg":
+        gauge = io.readNERSCGauge(f"ensemble/S32T32_cg_ipg/gauge/wilson_b5_95_fixed.{cfg}.ipg")
 
     # gauge.stoutSmear(1, 0.125, 4)
 
@@ -111,7 +113,7 @@ if is_root:
     fig_re, ax_re = default_plot()
     fig_norm, ax_norm = default_plot()
 
-    point_meff_z_re = pt2_to_meff(point_quark_corr_z_re_jk_avg, boundary="none")
+    point_meff_z_re = pt2_to_meff(point_quark_corr_z_re_jk_avg, boundary="periodic")
     ax_re.errorbar(
         np.arange(len(point_meff_z_re)),
         gv.mean(point_meff_z_re),
@@ -120,7 +122,7 @@ if is_root:
         **errorb,
     )
 
-    point_meff_z_norm = pt2_to_meff(point_quark_corr_z_norm_jk_avg, boundary="none")
+    point_meff_z_norm = pt2_to_meff(point_quark_corr_z_norm_jk_avg, boundary="periodic")
     ax_norm.errorbar(
         np.arange(len(point_meff_z_norm)),
         gv.mean(point_meff_z_norm),
