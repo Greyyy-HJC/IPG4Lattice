@@ -35,7 +35,7 @@ multigrid = None # [[4, 4, 4, 4], [2, 2, 2, 8]]
 
 latt_size = [32, 32, 32, 32]
 latt_info = core.LatticeInfo(latt_size, -1, xi_0 / nu)
-dirac = core.getClover(latt_info, mass, 1e-8, 10000, xi_0, csw_r, csw_t, multigrid)
+dirac = core.getClover(latt_info, mass, 1e-12, 10000, xi_0, csw_r, csw_t, multigrid)
 is_root = latt_info.mpi_rank == 0
 
 I = gamma.gamma(0)

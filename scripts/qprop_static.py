@@ -59,17 +59,17 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
 
     with dirac.useGauge(gauge):
         # Z-dir: point source at the origin
-        point_source = source.propagator(latt_info, "point", [0, 0, 0, 0])
-        point_propag = core.invertPropagator(dirac, point_source)
+        # point_source = source.propagator(latt_info, "point", [0, 0, 0, 0])
+        # point_propag = core.invertPropagator(dirac, point_source)
 
-        point_quark_corr_4d = core.gatherLattice(
-            core.lexico(contract(
-                "wtzyxijaa,ji->wtzyx",
-                point_propag.data,
-                I).get(),
-            [0, 1, 2, 3, 4]),
-            [0, 1, 2, 3],
-        )
+        # point_quark_corr_4d = core.gatherLattice(
+        #     core.lexico(contract(
+        #         "wtzyxijaa,ji->wtzyx",
+        #         point_propag.data,
+        #         I).get(),
+        #     [0, 1, 2, 3, 4]),
+        #     [0, 1, 2, 3],
+        # )
 
         # T-dir: wall source at t=0, sum over all spatial sinks
         wall_source = source.propagator(latt_info, "wall", 0)
@@ -85,51 +85,51 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
         )
 
         if is_root:
-            point_quark_corr_z.append(point_quark_corr_4d[0, :, 0, 0])  # t z y x
+            # point_quark_corr_z.append(point_quark_corr_4d[0, :, 0, 0])  # t z y x
             wall_quark_corr_t.append(wall_quark_corr_4d.sum(axis=(1, 2, 3)))
 
 
 # %%
 if is_root:
-    point_quark_corr_z = np.asarray(point_quark_corr_z)
+    # point_quark_corr_z = np.asarray(point_quark_corr_z)
     wall_quark_corr_t = np.asarray(wall_quark_corr_t)
-    print("shape of point_quark_corr_z: ", np.shape(point_quark_corr_z))  # (N_conf, Lz)
+    # print("shape of point_quark_corr_z: ", np.shape(point_quark_corr_z))  # (N_conf, Lz)
     print("shape of wall_quark_corr_t: ", np.shape(wall_quark_corr_t))    # (N_conf, Lt)
 
     os.makedirs("artifacts/data", exist_ok=True)
     np.savez(
         f"artifacts/data/qprop_static_{ensemble}.npz",
         wall_quark_corr_t=wall_quark_corr_t,
-        point_quark_corr_z=point_quark_corr_z,
+        # point_quark_corr_z=point_quark_corr_z,
         latt_size=latt_size,
     )
     print(f"Cached to artifacts/data/qprop_static_{ensemble}.npz")
 
-    point_quark_corr_z_re_jk_avg = jk_ls_avg(jackknife(np.real(point_quark_corr_z)))
-    point_quark_corr_z_norm_jk_avg = jk_ls_avg(jackknife(np.abs(point_quark_corr_z)))
+    # point_quark_corr_z_re_jk_avg = jk_ls_avg(jackknife(np.real(point_quark_corr_z)))
+    # point_quark_corr_z_norm_jk_avg = jk_ls_avg(jackknife(np.abs(point_quark_corr_z)))
     wall_quark_corr_t_re_jk_avg = jk_ls_avg(jackknife(np.real(wall_quark_corr_t)))
     wall_quark_corr_t_norm_jk_avg = jk_ls_avg(jackknife(np.abs(wall_quark_corr_t)))
 
     fig_re, ax_re = default_plot()
     fig_norm, ax_norm = default_plot()
 
-    point_meff_z_re = pt2_to_meff(point_quark_corr_z_re_jk_avg, boundary="periodic")
-    ax_re.errorbar(
-        np.arange(len(point_meff_z_re)),
-        gv.mean(point_meff_z_re),
-        yerr=gv.sdev(point_meff_z_re),
-        label="zdir_000",
-        **errorb,
-    )
+    # point_meff_z_re = pt2_to_meff(point_quark_corr_z_re_jk_avg, boundary="periodic")
+    # ax_re.errorbar(
+    #     np.arange(len(point_meff_z_re)),
+    #     gv.mean(point_meff_z_re),
+    #     yerr=gv.sdev(point_meff_z_re),
+    #     label="zdir_000",
+    #     **errorb,
+    # )
 
-    point_meff_z_norm = pt2_to_meff(point_quark_corr_z_norm_jk_avg, boundary="periodic")
-    ax_norm.errorbar(
-        np.arange(len(point_meff_z_norm)),
-        gv.mean(point_meff_z_norm),
-        yerr=gv.sdev(point_meff_z_norm),
-        label="zdir_000",
-        **errorb,
-    )
+    # point_meff_z_norm = pt2_to_meff(point_quark_corr_z_norm_jk_avg, boundary="periodic")
+    # ax_norm.errorbar(
+    #     np.arange(len(point_meff_z_norm)),
+    #     gv.mean(point_meff_z_norm),
+    #     yerr=gv.sdev(point_meff_z_norm),
+    #     label="zdir_000",
+    #     **errorb,
+    # )
 
     wall_meff_t_re = pt2_to_meff(wall_quark_corr_t_re_jk_avg, boundary="periodic")
     ax_re.errorbar(
