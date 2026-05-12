@@ -1,3 +1,4 @@
+# %%
 import os
 import gvar as gv
 import numpy as np
@@ -79,3 +80,5 @@ for gamma_name in gamma_keys:
     #     transparent=True,
     # )
     plt.show()
+
+# %%

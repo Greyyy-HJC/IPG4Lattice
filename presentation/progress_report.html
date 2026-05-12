@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPG4Lattice 项目进展报告</title>
+    <title>IPG4Lattice Project Progress Report</title>
     <style>
         * {
             margin: 0;
@@ -313,79 +313,79 @@
 <body>
     <div class="container">
         <header>
-            <h1>IPG4Lattice 项目进展报告</h1>
-            <p>Integrated Polyakov Gauge (IPG) 在库仑规范格点系综上的实现与验证</p>
-            <p style="margin-top: 10px; font-size: 0.95em;">报告生成日期: 2026年5月12日</p>
+            <h1>IPG4Lattice Project Progress Report</h1>
+            <p>Implementation and validation of Integrated Polyakov Gauge (IPG) on Coulomb-gauge lattice ensembles</p>
+            <p style="margin-top: 10px; font-size: 0.95em;">Report Generated: May 12, 2026</p>
         </header>
         
         <div class="content">
-            <!-- 项目概述 -->
+            <!-- Project Overview -->
             <section class="section">
-                <h2>📋 项目概述</h2>
+                <h2>📋 Project Overview</h2>
                 <div class="highlight-box">
-                    <p><strong>项目目标：</strong>在已完成库仑规范固定的格点系综基础上，实现积分 Polyakov 规范 (Integrated Polyakov Gauge, IPG) 变换，用于改进格点 QCD 夸克传播子的数值分析。</p>
-                    <p style="margin-top: 15px;"><strong>参考文献：</strong>arXiv:1204.0716v2 Appendix A</p>
-                    <p style="margin-top: 10px;"><strong>实现方法：</strong>对每个时间切片的时间方向链接进行空间平均，通过 SU(3) 投影和递归构造剩余规范变换，使时间方向链接的空间平均趋于常数矩阵。</p>
+                    <p><strong>Project Goal:</strong> Implement the Integrated Polyakov Gauge (IPG) transformation on Coulomb-gauge-fixed lattice ensembles to improve numerical analyses of lattice QCD quark propagators.</p>
+                    <p style="margin-top: 15px;"><strong>Reference:</strong> arXiv:1204.0716v2 Appendix A</p>
+                    <p style="margin-top: 10px;"><strong>Implementation Approach:</strong> Spatially average the temporal links on each time slice, then use SU(3) projection and a recursive residual gauge transformation so that the spatial average of the temporal links approaches a constant matrix.</p>
                 </div>
             </section>
             
-            <!-- 实现状态 -->
+            <!-- Implementation Status -->
             <section class="section">
-                <h2>✅ 实现状态</h2>
+                <h2>✅ Implementation Status</h2>
                 <div class="test-summary">
                     <div class="test-stat">
                         <span class="test-stat-number">3</span>
-                        <div class="test-stat-label">组态尺寸</div>
+                        <div class="test-stat-label">Lattice Sizes</div>
                     </div>
                     <div class="test-stat">
                         <span class="test-stat-number">5</span>
-                        <div class="test-stat-label">测试类型</div>
+                        <div class="test-stat-label">Test Categories</div>
                     </div>
                     <div class="test-stat">
                         <span class="test-stat-number">78</span>
-                        <div class="test-stat-label">生成图表</div>
+                        <div class="test-stat-label">Generated Plots</div>
                     </div>
                 </div>
                 
                 <div class="status-grid">
                     <div class="status-card">
-                        <h4>✓ IPG 核心实现</h4>
-                        <span class="badge badge-success">已完成</span>
-                        <p>基于 PyQUDA 实现 Appendix A 算法，包括时间切片平均、SU(3) 投影、矩阵 T 次方根计算和剩余规范变换。</p>
+                        <h4>✓ Core IPG Implementation</h4>
+                        <span class="badge badge-success">Completed</span>
+                        <p>Implemented the Appendix A algorithm with PyQUDA, including time-slice averaging, SU(3) projection, matrix T-th root evaluation, and the residual gauge transformation.</p>
                     </div>
                     
                     <div class="status-card">
-                        <h4>✓ 定义级验证</h4>
-                        <span class="badge badge-success">已完成</span>
-                        <p>实现 <code>validate_cg_ipg.py</code> 进行严格的数值验证，包括 post_spread、boundary、residual、reconstruct 等多项指标。</p>
+                        <h4>✓ Definition-Level Validation</h4>
+                        <span class="badge badge-success">Completed</span>
+                        <p>Implemented <code>validate_cg_ipg.py</code> for strict numerical validation, including metrics such as post_spread, boundary, residual, and reconstruct.</p>
                     </div>
                     
                     <div class="status-card">
-                        <h4>✓ 夸克传播子测试</h4>
-                        <span class="badge badge-success">已完成</span>
-                        <p>实现静态传播子、动量投影传播子和格林函数的计算与可视化。</p>
+                        <h4>✓ Quark Propagator Tests</h4>
+                        <span class="badge badge-success">Completed</span>
+                        <p>Implemented computation and visualization for static propagators, momentum-projected propagators, and Green's functions.</p>
                     </div>
                     
                     <div class="status-card">
-                        <h4>✓ 多尺寸系综</h4>
-                        <span class="badge badge-success">已完成</span>
-                        <p>成功在 S16T16、S32T32、S48T64 三种格点尺寸上完成 IPG 变换和验证。</p>
+                        <h4>✓ Multiple Ensemble Sizes</h4>
+                        <span class="badge badge-success">Completed</span>
+                        <p>Successfully completed IPG transformation and validation on three lattice sizes: S16T16, S32T32, and S48T64.</p>
                     </div>
                 </div>
             </section>
             
-            <!-- 测试组态 -->
+            <!-- Test Ensembles -->
             <section class="section">
-                <h2>🔧 测试组态</h2>
+                <h2>🔧 Test Ensembles</h2>
                 
                 <table class="metrics-table">
                     <thead>
                         <tr>
-                            <th>系综名称</th>
-                            <th>格点尺寸</th>
-                            <th>规范类型</th>
-                            <th>额外处理</th>
-                            <th>测试状态</th>
+                            <th>Ensemble Name</th>
+                            <th>Lattice Size</th>
+                            <th>Gauge Type</th>
+                            <th>Additional Processing</th>
+                            <th>Test Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -394,88 +394,88 @@
                             <td>16³×16</td>
                             <td>Coulomb Gauge</td>
                             <td>-</td>
-                            <td><span class="badge badge-success">完成</span></td>
+                            <td><span class="badge badge-success">Completed</span></td>
                         </tr>
                         <tr>
                             <td><code>S16T16_cg_ipg</code></td>
                             <td>16³×16</td>
                             <td>CG + IPG</td>
                             <td>-</td>
-                            <td><span class="badge badge-success">完成</span></td>
+                            <td><span class="badge badge-success">Completed</span></td>
                         </tr>
                         <tr>
                             <td><code>S32T32_cg_ipg</code></td>
                             <td>32³×32</td>
                             <td>CG + IPG</td>
                             <td>-</td>
-                            <td><span class="badge badge-success">完成</span></td>
+                            <td><span class="badge badge-success">Completed</span></td>
                         </tr>
                         <tr>
                             <td><code>S32T32_cg_ipg_no_hyp</code></td>
                             <td>32³×32</td>
                             <td>CG + IPG</td>
-                            <td>无超立方涂抹</td>
-                            <td><span class="badge badge-success">完成</span></td>
+                            <td>No hypercubic smearing</td>
+                            <td><span class="badge badge-success">Completed</span></td>
                         </tr>
                         <tr>
                             <td><code>S48T64_cg_ipg</code></td>
                             <td>48³×64</td>
                             <td>CG + IPG</td>
                             <td>-</td>
-                            <td><span class="badge badge-success">完成</span></td>
+                            <td><span class="badge badge-success">Completed</span></td>
                         </tr>
                         <tr>
                             <td><code>S48T64_cg_ipg_hyp</code></td>
                             <td>48³×64</td>
                             <td>CG + IPG</td>
-                            <td>超立方涂抹</td>
-                            <td><span class="badge badge-success">完成</span></td>
+                            <td>Hypercubic smearing</td>
+                            <td><span class="badge badge-success">Completed</span></td>
                         </tr>
                         <tr>
                             <td><code>S48T64_cg_ipg_no_hyp</code></td>
                             <td>48³×64</td>
                             <td>CG + IPG</td>
-                            <td>无超立方涂抹</td>
-                            <td><span class="badge badge-success">完成</span></td>
+                            <td>No hypercubic smearing</td>
+                            <td><span class="badge badge-success">Completed</span></td>
                         </tr>
                     </tbody>
                 </table>
             </section>
             
-            <!-- 测试内容 -->
+            <!-- Test Content -->
             <section class="section">
-                <h2>🧪 测试内容</h2>
+                <h2>🧪 Test Content</h2>
                 
-                <h3>1. IPG 定义级验证 (<code>validate_cg_ipg.py</code>)</h3>
+                <h3>1. IPG Definition-Level Validation (<code>validate_cg_ipg.py</code>)</h3>
                 <div class="highlight-box">
-                    <p><strong>验证指标：</strong></p>
+                    <p><strong>Validation Metrics:</strong></p>
                     <ul>
-                        <li><strong>post_spread</strong>: IPG 变换后时间链接空间平均的离散度（Z₃ 对齐到目标矩阵 C）</li>
-                        <li><strong>boundary</strong>: 递归构造 g(t) 的周期闭合误差</li>
-                        <li><strong>residual</strong>: g(t)u(t)g†(t+1) = C 的最大违反度</li>
-                        <li><strong>reconstruct</strong>: 写入的 CG+IPG 规范与从原始 CG 规范重建的规范的逐链接最大差异</li>
-                        <li><strong>幺正性和行列式检查</strong>: 验证目标矩阵 C、积分 Polyakov 矩阵 P 和变换 g(t) 的 SU(3) 性质</li>
+                        <li><strong>post_spread</strong>: Dispersion of the spatially averaged temporal links after IPG transformation, with Z₃ alignment to the target matrix C</li>
+                        <li><strong>boundary</strong>: Periodic closure error of the recursively constructed g(t)</li>
+                        <li><strong>residual</strong>: Maximum violation of g(t)u(t)g†(t+1) = C</li>
+                        <li><strong>reconstruct</strong>: Maximum link-by-link difference between the written CG+IPG gauge and the gauge reconstructed from the original CG gauge</li>
+                        <li><strong>Unitarity and determinant checks</strong>: Validate the SU(3) properties of the target matrix C, the integrated Polyakov matrix P, and the transformation g(t)</li>
                     </ul>
-                    <p style="margin-top: 15px;"><strong>验证容差：</strong></p>
+                    <p style="margin-top: 15px;"><strong>Validation Tolerances:</strong></p>
                     <ul>
                         <li><code>--spread-tol = 1e-10</code></li>
                         <li><code>--boundary-tol = 1e-10</code></li>
                         <li><code>--reconstruct-tol = 1e-10</code></li>
                     </ul>
-                    <p style="margin-top: 15px;"><strong>结果：</strong><span class="badge badge-success">所有组态通过验证</span></p>
-                    <p>实际观测到的 IPG 诊断指标通常在 <code>1e-14</code> 到 <code>1e-13</code> 量级，远优于设定的容差要求。</p>
+                    <p style="margin-top: 15px;"><strong>Result:</strong><span class="badge badge-success">All ensembles passed validation</span></p>
+                    <p>The observed IPG diagnostic metrics are typically in the <code>1e-14</code> to <code>1e-13</code> range, well below the configured tolerances.</p>
                 </div>
                 
-                <h3>2. 静态夸克传播子测试 (<code>qprop_static.py</code>)</h3>
+                <h3>2. Static Quark Propagator Test (<code>qprop_static.py</code>)</h3>
                 <div class="highlight-box">
-                    <p><strong>测试内容：</strong></p>
+                    <p><strong>Test Content:</strong></p>
                     <ul>
-                        <li>壁源 (wall source) 时间方向传播子 - 空间平均</li>
-                        <li>点源 (point source) 空间方向传播子 - 从原点出发</li>
-                        <li>有效质量提取和可视化</li>
-                        <li>原始数据缓存到 <code>artifacts/data/qprop_static_{ensemble}.npz</code></li>
+                        <li>Wall-source temporal propagator with spatial averaging</li>
+                        <li>Point-source spatial propagator starting from the origin</li>
+                        <li>Effective-mass extraction and visualization</li>
+                        <li>Raw data cached to <code>artifacts/data/qprop_static_{ensemble}.npz</code></li>
                     </ul>
-                    <p style="margin-top: 15px;"><strong>测试组态：</strong></p>
+                    <p style="margin-top: 15px;"><strong>Test Ensembles:</strong></p>
                     <span class="badge badge-info">S16T16_cg</span>
                     <span class="badge badge-info">S16T16_cg_ipg</span>
                     <span class="badge badge-info">S32T32_cg_ipg</span>
@@ -483,627 +483,627 @@
                     <span class="badge badge-info">S48T64_cg_ipg</span>
                     <span class="badge badge-info">S48T64_cg_ipg_hyp</span>
                     <span class="badge badge-info">S48T64_cg_ipg_no_hyp</span>
-                    <p style="margin-top: 15px;"><strong>结果：</strong><span class="badge badge-success">IPG 后时间方向传播子信号显著改善</span></p>
+                    <p style="margin-top: 15px;"><strong>Result:</strong><span class="badge badge-success">The temporal propagator signal improves significantly after IPG</span></p>
                 </div>
                 
-                <h3>3. 动量投影传播子测试 (<code>qprop_mom.py</code>)</h3>
+                <h3>3. Momentum-Projected Propagator Test (<code>qprop_mom.py</code>)</h3>
                 <div class="highlight-box">
-                    <p><strong>测试内容：</strong></p>
+                    <p><strong>Test Content:</strong></p>
                     <ul>
-                        <li>动量壁源 (momentum wall source) 时间方向传播子</li>
-                        <li>对每个动量 p 使用壁源 × exp(±ip·x) 相位，统计精度比单点源提升 L³ 倍</li>
-                        <li>测试所有五个 gamma 插入算符：I, gX, gY, gZ, gT</li>
-                        <li>每个动量的有效质量可视化</li>
+                        <li>Momentum-wall-source temporal propagator</li>
+                        <li>For each momentum p, use wall-source × exp(±ip·x) phases, improving statistics by a factor of L³ compared with a single point source</li>
+                        <li>Test all five gamma insertions: I, gX, gY, gZ, and gT</li>
+                        <li>Effective-mass visualization for each momentum</li>
                     </ul>
-                    <p style="margin-top: 15px;"><strong>测试组态：</strong></p>
+                    <p style="margin-top: 15px;"><strong>Test Ensembles:</strong></p>
                     <span class="badge badge-info">S16T16_cg_ipg</span>
                     <span class="badge badge-info">S32T32_cg_ipg</span>
                     <span class="badge badge-info">S32T32_cg_ipg_no_hyp</span>
                     <span class="badge badge-info">S48T64_cg_ipg</span>
                     <span class="badge badge-info">S48T64_cg_ipg_hyp</span>
-                    <p style="margin-top: 15px;"><strong>Gamma 算符：</strong></p>
+                    <p style="margin-top: 15px;"><strong>Gamma Operators:</strong></p>
                     <span class="badge badge-info">I (Identity)</span>
                     <span class="badge badge-info">gX</span>
                     <span class="badge badge-info">gY</span>
                     <span class="badge badge-info">gZ</span>
                     <span class="badge badge-info">gT</span>
                     <span class="badge badge-info">pDotg</span>
-                    <p style="margin-top: 15px;"><strong>结果：</strong><span class="badge badge-success">动量投影传播子在各个动量点均显示良好信号</span></p>
+                    <p style="margin-top: 15px;"><strong>Result:</strong><span class="badge badge-success">Momentum-projected propagators show good signals across the tested momentum points</span></p>
                 </div>
                 
-                <h3>4. 动量空间格林函数测试 (<code>qprop_greens.py</code>)</h3>
+                <h3>4. Momentum-Space Green's Function Test (<code>qprop_greens.py</code>)</h3>
                 <div class="highlight-box">
-                    <p><strong>测试内容：</strong></p>
+                    <p><strong>Test Content:</strong></p>
                     <ul>
-                        <li>完全傅立叶变换的夸克格林函数 G_Γ(p) = Nc Tr[Γ S(p)]</li>
-                        <li>选定的 4-动量点（时间动量 n4 = 0..T/2）</li>
-                        <li>所有五个 gamma 插入算符的复数值格林函数</li>
-                        <li>数据缓存到 <code>artifacts/data/qprop_greens_{ensemble}.npz</code></li>
+                        <li>Fully Fourier-transformed quark Green's function G_Γ(p) = Nc Tr[Γ S(p)]</li>
+                        <li>Selected four-momentum points with temporal momentum n4 = 0..T/2</li>
+                        <li>Complex-valued Green's functions for all five gamma insertions</li>
+                        <li>Data cached to <code>artifacts/data/qprop_greens_{ensemble}.npz</code></li>
                     </ul>
-                    <p style="margin-top: 15px;"><strong>测试组态：</strong></p>
+                    <p style="margin-top: 15px;"><strong>Test Ensembles:</strong></p>
                     <span class="badge badge-info">S16T16_cg</span>
                     <span class="badge badge-info">S16T16_cg_ipg</span>
                     <span class="badge badge-info">S32T32_cg_ipg</span>
                     <span class="badge badge-info">S32T32_cg_ipg_no_hyp</span>
                     <span class="badge badge-info">S48T64_cg_ipg</span>
                     <span class="badge badge-info">S48T64_cg_ipg_no_hyp</span>
-                    <p style="margin-top: 15px;"><strong>Gamma 算符：</strong></p>
+                    <p style="margin-top: 15px;"><strong>Gamma Operators:</strong></p>
                     <span class="badge badge-info">I</span>
                     <span class="badge badge-info">gX</span>
                     <span class="badge badge-info">gY</span>
                     <span class="badge badge-info">gZ</span>
                     <span class="badge badge-info">gT</span>
                     <span class="badge badge-info">pDotg</span>
-                    <p style="margin-top: 15px;"><strong>结果：</strong><span class="badge badge-success">格林函数显示预期的 Dirac 结构</span></p>
-                    <p>G_Γ(p) 的迹编码了逆传播子的修饰函数 A_s, A_t, B_m（参考文献 Eq. 20），这些函数应近似与 p4 无关。</p>
+                    <p style="margin-top: 15px;"><strong>Result:</strong><span class="badge badge-success">Green's functions show the expected Dirac structure</span></p>
+                    <p>The trace of G_Γ(p) encodes the inverse-propagator dressing functions A_s, A_t, and B_m (reference Eq. 20), which should be approximately independent of p4.</p>
                 </div>
                 
-                <h3>5. 质量提取与对比测试 (<code>qprop_fig3_mass.py</code>)</h3>
+                <h3>5. Mass Extraction and Comparison Test (<code>qprop_fig3_mass.py</code>)</h3>
                 <div class="highlight-box">
-                    <p><strong>测试内容：</strong></p>
+                    <p><strong>Test Content:</strong></p>
                     <ul>
-                        <li>从传播子数据中提取有效质量</li>
-                        <li>CG 与 CG+IPG 组态的质量对比</li>
-                        <li>验证 IPG 变换对物理量的影响</li>
+                        <li>Extract effective masses from propagator data</li>
+                        <li>Compare masses between CG and CG+IPG ensembles</li>
+                        <li>Validate the impact of the IPG transformation on physical observables</li>
                     </ul>
-                    <p style="margin-top: 15px;"><strong>测试组态：</strong></p>
+                    <p style="margin-top: 15px;"><strong>Test Ensemble:</strong></p>
                     <span class="badge badge-info">S16T16_cg_ipg</span>
-                    <p style="margin-top: 15px;"><strong>配置数量：</strong>50 个组态</p>
-                    <p style="margin-top: 10px;"><strong>结果：</strong><span class="badge badge-success">质量提取稳定，IPG 变换改善信号质量</span></p>
+                    <p style="margin-top: 15px;"><strong>Configuration Count:</strong> 50 configurations</p>
+                    <p style="margin-top: 10px;"><strong>Result:</strong><span class="badge badge-success">Mass extraction is stable, and the IPG transformation improves signal quality</span></p>
                 </div>
             </section>
             
-            <!-- 关键结果 -->
+            <!-- Key Results -->
             <section class="section">
-                <h2>📊 关键结果</h2>
+                <h2>📊 Key Results</h2>
                 
                 <div class="status-grid">
                     <div class="status-card">
-                        <h4>数值精度</h4>
-                        <p><strong>IPG 诊断指标：</strong></p>
+                        <h4>Numerical Precision</h4>
+                        <p><strong>IPG Diagnostics:</strong></p>
                         <ul style="margin-top: 10px; font-size: 0.95em;">
                             <li>post_spread: ~1e-14</li>
                             <li>boundary: ~1e-14</li>
                             <li>residual: ~1e-13</li>
                             <li>reconstruct: ~1e-13</li>
                         </ul>
-                        <span class="badge badge-success" style="margin-top: 10px;">优于设定容差 1e-10</span>
+                        <span class="badge badge-success" style="margin-top: 10px;">Better than the configured 1e-10 tolerance</span>
                     </div>
                     
                     <div class="status-card">
-                        <h4>物理信号改善</h4>
-                        <p><strong>时间方向传播子：</strong></p>
-                        <p style="font-size: 0.95em; margin-top: 10px;">IPG 变换后，壁源时间方向传播子信号显著增强，噪声比大幅降低。</p>
-                        <span class="badge badge-success" style="margin-top: 10px;">信号质量提升</span>
+                        <h4>Physical Signal Improvement</h4>
+                        <p><strong>Temporal Propagator:</strong></p>
+                        <p style="font-size: 0.95em; margin-top: 10px;">After the IPG transformation, the wall-source temporal propagator signal is significantly enhanced and the noise ratio is greatly reduced.</p>
+                        <span class="badge badge-success" style="margin-top: 10px;">Improved signal quality</span>
                     </div>
                     
                     <div class="status-card">
-                        <h4>尺度依赖性</h4>
-                        <p><strong>多尺寸验证：</strong></p>
-                        <p style="font-size: 0.95em; margin-top: 10px;">在 S16T16、S32T32、S48T64 三种格点尺寸上验证，算法稳定性和数值精度保持一致。</p>
-                        <span class="badge badge-success" style="margin-top: 10px;">尺度无关</span>
+                        <h4>Scale Dependence</h4>
+                        <p><strong>Multi-Size Validation:</strong></p>
+                        <p style="font-size: 0.95em; margin-top: 10px;">Validation on S16T16, S32T32, and S48T64 shows consistent algorithmic stability and numerical precision.</p>
+                        <span class="badge badge-success" style="margin-top: 10px;">Scale independent</span>
                     </div>
                     
                     <div class="status-card">
-                        <h4>涂抹方案对比</h4>
-                        <p><strong>超立方涂抹影响：</strong></p>
-                        <p style="font-size: 0.95em; margin-top: 10px;">对比有无超立方涂抹 (hypercubic smearing) 的结果，评估涂抹对传播子的影响。</p>
-                        <span class="badge badge-info" style="margin-top: 10px;">系统性研究</span>
+                        <h4>Smearing Scheme Comparison</h4>
+                        <p><strong>Hypercubic Smearing Impact:</strong></p>
+                        <p style="font-size: 0.95em; margin-top: 10px;">Compare results with and without hypercubic smearing to evaluate its effect on the propagators.</p>
+                        <span class="badge badge-info" style="margin-top: 10px;">Systematic study</span>
                     </div>
                 </div>
             </section>
             
-            <!-- 可视化结果 -->
+            <!-- Visualization Results -->
             <section class="section">
-                <h2>📈 可视化结果</h2>
-                <p style="margin-bottom: 20px;">以下是按测试类型分类的图表集合。点击按钮展开查看详细结果。</p>
+                <h2>📈 Visualization Results</h2>
+                <p style="margin-bottom: 20px;">The plots below are grouped by test category. Click each button to expand the detailed results.</p>
                 
-                <!-- 静态传播子 -->
-                <button type="button" class="collapsible">静态夸克传播子 (Static Propagator) - 8 张图表</button>
+                <!-- Static Propagator -->
+                <button type="button" class="collapsible">Static Quark Propagator - 8 Plots</button>
                 <div class="collapsible-content">
                     <div class="collapsible-content-inner">
-                        <h4>有效质量提取</h4>
+                        <h4>Effective-Mass Extraction</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>S16T16 CG</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量</p>
-                                <a href="artifacts/plots/qprop_static_meff_S16T16_cg.pdf" class="plot-link">查看 PDF</a>
+                                <p style="font-size: 0.85em; color: #999;">Effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_S16T16_cg.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>S16T16 CG+IPG</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量</p>
-                                <a href="artifacts/plots/qprop_static_meff_S16T16_cg_ipg.pdf" class="plot-link">查看 PDF</a>
+                                <p style="font-size: 0.85em; color: #999;">Effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_S16T16_cg_ipg.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
-                                <p><strong>S16T16 CG+IPG (标准化)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量（归一化）</p>
-                                <a href="artifacts/plots/qprop_static_meff_norm_S16T16_cg_ipg.pdf" class="plot-link">查看 PDF</a>
+                                <p><strong>S16T16 CG+IPG (Normalized)</strong></p>
+                                <p style="font-size: 0.85em; color: #999;">Normalized effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_norm_S16T16_cg_ipg.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
-                                <p><strong>S16T16 CG+IPG (实部)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量实部</p>
-                                <a href="artifacts/plots/qprop_static_meff_re_S16T16_cg_ipg.pdf" class="plot-link">查看 PDF</a>
+                                <p><strong>S16T16 CG+IPG (Real Part)</strong></p>
+                                <p style="font-size: 0.85em; color: #999;">Real part of effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_re_S16T16_cg_ipg.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
-                                <p><strong>S32T32 CG+IPG (无涂抹)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量</p>
-                                <a href="artifacts/plots/qprop_static_meff_S32T32_cg_ipg_no_hyp.pdf" class="plot-link">查看 PDF</a>
+                                <p><strong>S32T32 CG+IPG (No Smearing)</strong></p>
+                                <p style="font-size: 0.85em; color: #999;">Effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_S32T32_cg_ipg_no_hyp.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
-                                <p><strong>S32T32 CG+IPG (标准化)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量（归一化）</p>
-                                <a href="artifacts/plots/qprop_static_meff_norm_S32T32_cg_ipg.pdf" class="plot-link">查看 PDF</a>
+                                <p><strong>S32T32 CG+IPG (Normalized)</strong></p>
+                                <p style="font-size: 0.85em; color: #999;">Normalized effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_norm_S32T32_cg_ipg.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
-                                <p><strong>S32T32 CG+IPG (实部)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量实部</p>
-                                <a href="artifacts/plots/qprop_static_meff_re_S32T32_cg_ipg.pdf" class="plot-link">查看 PDF</a>
+                                <p><strong>S32T32 CG+IPG (Real Part)</strong></p>
+                                <p style="font-size: 0.85em; color: #999;">Real part of effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_re_S32T32_cg_ipg.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>S48T64 CG+IPG</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量</p>
-                                <a href="artifacts/plots/qprop_static_meff_S48T64_cg_ipg.pdf" class="plot-link">查看 PDF</a>
+                                <p style="font-size: 0.85em; color: #999;">Effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_S48T64_cg_ipg.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
-                                <p><strong>S48T64 CG+IPG (有涂抹)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量</p>
-                                <a href="artifacts/plots/qprop_static_meff_S48T64_cg_ipg_hyp.pdf" class="plot-link">查看 PDF</a>
+                                <p><strong>S48T64 CG+IPG (With Smearing)</strong></p>
+                                <p style="font-size: 0.85em; color: #999;">Effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_S48T64_cg_ipg_hyp.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
-                                <p><strong>S48T64 CG+IPG (无涂抹)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">有效质量</p>
-                                <a href="artifacts/plots/qprop_static_meff_S48T64_cg_ipg_no_hyp.pdf" class="plot-link">查看 PDF</a>
+                                <p><strong>S48T64 CG+IPG (No Smearing)</strong></p>
+                                <p style="font-size: 0.85em; color: #999;">Effective mass</p>
+                                <a href="artifacts/plots/qprop_static_meff_S48T64_cg_ipg_no_hyp.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">点源传播子</h4>
+                        <h4 style="margin-top: 30px;">Point-Source Propagator</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>S16T16 CG+IPG</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">点源有效质量</p>
-                                <a href="artifacts/plots/qprop_static_pt_meff_S16T16_cg_ipg.pdf" class="plot-link">查看 PDF</a>
+                                <p style="font-size: 0.85em; color: #999;">Point-source effective mass</p>
+                                <a href="artifacts/plots/qprop_static_pt_meff_S16T16_cg_ipg.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
-                                <p><strong>S48T64 CG+IPG (无涂抹)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">点源有效质量</p>
-                                <a href="artifacts/plots/qprop_static_pt_meff_S48T64_cg_ipg_no_hyp.pdf" class="plot-link">查看 PDF</a>
+                                <p><strong>S48T64 CG+IPG (No Smearing)</strong></p>
+                                <p style="font-size: 0.85em; color: #999;">Point-source effective mass</p>
+                                <a href="artifacts/plots/qprop_static_pt_meff_S48T64_cg_ipg_no_hyp.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- 动量投影传播子 -->
-                <button type="button" class="collapsible">动量投影传播子 (Momentum Propagator) - 32 张图表</button>
+                <!-- Momentum-Projected Propagator -->
+                <button type="button" class="collapsible">Momentum-Projected Propagator - 32 Plots</button>
                 <div class="collapsible-content">
                     <div class="collapsible-content-inner">
-                        <h4>S16T16 系综 - 标准化有效质量</h4>
+                        <h4>S16T16 Ensemble - Normalized Effective Mass</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: pDotg</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_pDotg.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S16T16_cg_ipg_pDotg.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S16T16 系综 - 有效质量实部</h4>
+                        <h4 style="margin-top: 30px;">S16T16 Ensemble - Real Part of Effective Mass</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: pDotg</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_pDotg.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S16T16_cg_ipg_pDotg.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S32T32 系综 - 标准化有效质量</h4>
+                        <h4 style="margin-top: 30px;">S32T32 Ensemble - Normalized Effective Mass</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: pDotg</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_pDotg.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_norm_S32T32_cg_ipg_pDotg.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S32T32 系综 - 有效质量实部</h4>
+                        <h4 style="margin-top: 30px;">S32T32 Ensemble - Real Part of Effective Mass</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: pDotg</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_pDotg.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_re_S32T32_cg_ipg_pDotg.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S32T32 系综 - 无涂抹</h4>
+                        <h4 style="margin-top: 30px;">S32T32 Ensemble - No Smearing</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S32T32_cg_ipg_no_hyp_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S32T32_cg_ipg_no_hyp_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S32T32_cg_ipg_no_hyp_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S32T32_cg_ipg_no_hyp_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S48T64 系综 - 基础测试</h4>
+                        <h4 style="margin-top: 30px;">S48T64 Ensemble - Baseline Test</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S48T64 系综 - 有涂抹</h4>
+                        <h4 style="margin-top: 30px;">S48T64 Ensemble - With Smearing</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_mom_tdir_meff_S48T64_cg_ipg_hyp_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- 格林函数 -->
-                <button type="button" class="collapsible">动量空间格林函数 (Green's Functions) - 37 张图表</button>
+                <!-- Green's Functions -->
+                <button type="button" class="collapsible">Momentum-Space Green's Functions - 37 Plots</button>
                 <div class="collapsible-content">
                     <div class="collapsible-content-inner">
-                        <h4>S16T16 CG 系综</h4>
+                        <h4>S16T16 CG Ensemble</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: pDotg</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_pDotg.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_pDotg.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S16T16 CG+IPG 系综</h4>
+                        <h4 style="margin-top: 30px;">S16T16 CG+IPG Ensemble</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: pDotg</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_pDotg.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S16T16_cg_ipg_pDotg.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S32T32 CG+IPG 系综</h4>
+                        <h4 style="margin-top: 30px;">S32T32 CG+IPG Ensemble</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: pDotg</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_pDotg.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_pDotg.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S32T32 CG+IPG 系综 (无涂抹)</h4>
+                        <h4 style="margin-top: 30px;">S32T32 CG+IPG Ensemble (No Smearing)</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S32T32_cg_ipg_no_hyp_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S48T64 CG+IPG 系综</h4>
+                        <h4 style="margin-top: 30px;">S48T64 CG+IPG Ensemble</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_I.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 30px;">S48T64 CG+IPG 系综 (无涂抹)</h4>
+                        <h4 style="margin-top: 30px;">S48T64 CG+IPG Ensemble (No Smearing)</h4>
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>Gamma: I</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_I.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_I.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gT</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_gT.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_gT.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gX</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_gX.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_gX.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gY</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_gY.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_gY.pdf" class="plot-link">View PDF</a>
                             </div>
                             <div class="plot-item">
                                 <p><strong>Gamma: gZ</strong></p>
-                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_gZ.pdf" class="plot-link">查看 PDF</a>
+                                <a href="artifacts/plots/qprop_greens_S48T64_cg_ipg_no_hyp_gZ.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- 质量提取 -->
-                <button type="button" class="collapsible">质量提取与对比 (Mass Extraction) - 1 张图表</button>
+                <!-- Mass Extraction -->
+                <button type="button" class="collapsible">Mass Extraction and Comparison - 1 Plot</button>
                 <div class="collapsible-content">
                     <div class="collapsible-content-inner">
                         <div class="plot-gallery">
                             <div class="plot-item">
                                 <p><strong>S16T16 CG+IPG</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">Fig. 3 风格质量提取</p>
-                                <a href="artifacts/plots/qprop_fig3_mass_S16T16_cg_ipg.pdf" class="plot-link">查看 PDF</a>
+                                <p style="font-size: 0.85em; color: #999;">Fig. 3-style mass extraction</p>
+                                <a href="artifacts/plots/qprop_fig3_mass_S16T16_cg_ipg.pdf" class="plot-link">View PDF</a>
                             </div>
                         </div>
                         <div class="highlight-box" style="margin-top: 20px;">
-                            <p><strong>测试详情：</strong></p>
+                            <p><strong>Test Details:</strong></p>
                             <ul>
-                                <li>使用 50 个组态</li>
-                                <li>构建 65536 个 4-动量（圆柱截断后保留 1696 个）</li>
-                                <li>BiCGstab 求解器收敛于 ~18 次迭代</li>
-                                <li>相对残差达到 ~1e-9（要求 1e-8）</li>
+                                <li>Use 50 configurations</li>
+                                <li>Construct 65,536 four-momenta, with 1,696 retained after cylindrical truncation</li>
+                                <li>The BiCGstab solver converges in ~18 iterations</li>
+                                <li>The relative residual reaches ~1e-9, compared with the 1e-8 requirement</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </section>
             
-            <!-- 技术细节 -->
+            <!-- Technical Details -->
             <section class="section">
-                <h2>⚙️ 技术细节</h2>
+                <h2>⚙️ Technical Details</h2>
                 
-                <h3>数值方法</h3>
+                <h3>Numerical Methods</h3>
                 <div class="highlight-box">
                     <ul>
-                        <li><strong>SU(3) 投影：</strong>Cabibbo-Marinari 子群投影，内部容差 1e-14</li>
-                        <li><strong>矩阵 T 次方根：</strong>使用 <code>scipy.linalg.logm/expm</code> 计算 P^(1/T)</li>
-                        <li><strong>Z₃ 中心对齐：</strong>选择使 Frobenius 距离最小的中心相位</li>
-                        <li><strong>行列式归一化：</strong>采用主复立方根约定 det^(1/3) = |det|^(1/3) exp(i arg(det)/3)</li>
-                        <li><strong>精度：</strong>IPG 构造使用 numpy/scipy complex128（双精度）</li>
+                        <li><strong>SU(3) Projection:</strong> Cabibbo-Marinari subgroup projection with an internal tolerance of 1e-14</li>
+                        <li><strong>Matrix T-th Root:</strong> Compute P^(1/T) with <code>scipy.linalg.logm/expm</code></li>
+                        <li><strong>Z₃ Center Alignment:</strong> Select the center phase that minimizes the Frobenius distance</li>
+                        <li><strong>Determinant Normalization:</strong> Use the principal complex cube-root convention det^(1/3) = |det|^(1/3) exp(i arg(det)/3)</li>
+                        <li><strong>Precision:</strong> IPG construction uses numpy/scipy complex128 double precision</li>
                     </ul>
                 </div>
                 
-                <h3>夸克求解器</h3>
+                <h3>Quark Solver</h3>
                 <div class="highlight-box">
                     <ul>
-                        <li><strong>算法：</strong>BiCGstab (QUDA 实现)</li>
-                        <li><strong>收敛标准：</strong>L2 相对残差 < 1e-8</li>
-                        <li><strong>典型性能：</strong>17-19 次迭代收敛，约 250-280 GFLOPS</li>
-                        <li><strong>硬件：</strong>NVIDIA GeForce RTX 3060 (sm_86)</li>
-                        <li><strong>QUDA 版本：</strong>1.1.0</li>
+                        <li><strong>Algorithm:</strong> BiCGstab (QUDA implementation)</li>
+                        <li><strong>Convergence Criterion:</strong> L2 relative residual < 1e-8</li>
+                        <li><strong>Typical Performance:</strong> Converges in 17-19 iterations at approximately 250-280 GFLOPS</li>
+                        <li><strong>Hardware:</strong> NVIDIA GeForce RTX 3060 (sm_86)</li>
+                        <li><strong>QUDA Version:</strong> 1.1.0</li>
                     </ul>
                 </div>
                 
-                <h3>数据管理</h3>
+                <h3>Data Management</h3>
                 <div class="highlight-box">
                     <ul>
-                        <li><strong>输入格式：</strong>NERSC 规范场文件</li>
-                        <li><strong>输出格式：</strong>NERSC 规范场文件 (CG+IPG) + NumPy 归档 (变换 g(t))</li>
-                        <li><strong>缓存：</strong>传播子和格林函数数据缓存为 <code>.npz</code> 格式</li>
-                        <li><strong>可视化：</strong>所有图表保存为 PDF 格式</li>
+                        <li><strong>Input Format:</strong> NERSC gauge-field files</li>
+                        <li><strong>Output Format:</strong> NERSC gauge-field files (CG+IPG) plus NumPy archives for the transformation g(t)</li>
+                        <li><strong>Caching:</strong> Propagator and Green's function data are cached in <code>.npz</code> format</li>
+                        <li><strong>Visualization:</strong> All plots are saved in PDF format</li>
                     </ul>
                 </div>
             </section>
             
-            <!-- 结论 -->
+            <!-- Conclusions -->
             <section class="section">
-                <h2>📌 结论与下一步</h2>
+                <h2>📌 Conclusions and Next Steps</h2>
                 
                 <div class="status-grid">
                     <div class="status-card">
-                        <h4>✓ 已完成</h4>
+                        <h4>✓ Completed</h4>
                         <ul style="margin-top: 10px; font-size: 0.95em;">
-                            <li>IPG 核心算法实现</li>
-                            <li>定义级严格验证</li>
-                            <li>多尺寸系综测试</li>
-                            <li>完整的夸克传播子分析</li>
-                            <li>涂抹方案对比研究</li>
+                            <li>Core IPG algorithm implementation</li>
+                            <li>Strict definition-level validation</li>
+                            <li>Multi-size ensemble tests</li>
+                            <li>Complete quark-propagator analysis</li>
+                            <li>Comparative study of smearing schemes</li>
                         </ul>
                     </div>
                     
                     <div class="status-card">
-                        <h4>💡 主要发现</h4>
+                        <h4>💡 Main Findings</h4>
                         <ul style="margin-top: 10px; font-size: 0.95em;">
-                            <li>IPG 数值精度优异（~1e-14）</li>
-                            <li>时间方向传播子信号显著改善</li>
-                            <li>算法在不同格点尺寸上稳定</li>
-                            <li>格林函数显示预期的 Dirac 结构</li>
+                            <li>IPG achieves excellent numerical precision (~1e-14)</li>
+                            <li>The temporal propagator signal improves significantly</li>
+                            <li>The algorithm is stable across different lattice sizes</li>
+                            <li>Green's functions show the expected Dirac structure</li>
                         </ul>
                     </div>
                     
                     <div class="status-card">
-                        <h4>🔮 潜在扩展</h4>
+                        <h4>🔮 Potential Extensions</h4>
                         <ul style="margin-top: 10px; font-size: 0.95em;">
-                            <li>更大格点尺寸测试</li>
-                            <li>不同格点作用量研究</li>
-                            <li>物理量提取优化</li>
-                            <li>与其他规范固定方案对比</li>
+                            <li>Tests on larger lattice sizes</li>
+                            <li>Studies with different lattice actions</li>
+                            <li>Optimization of physical-observable extraction</li>
+                            <li>Comparison with other gauge-fixing schemes</li>
                         </ul>
                     </div>
                 </div>
                 
                 <div class="highlight-box" style="margin-top: 30px;">
-                    <h4>验收标准</h4>
-                    <p style="margin-top: 10px;"><strong>✓ 所有验收标准已满足：</strong></p>
+                    <h4>Acceptance Criteria</h4>
+                    <p style="margin-top: 10px;"><strong>✓ All acceptance criteria have been satisfied:</strong></p>
                     <ul style="margin-top: 10px;">
-                        <li>✓ 每个投影的 u(t) 满足幺正性和 det = 1（容差内）</li>
-                        <li>✓ 目标矩阵 C 满足幺正性和 det = 1（容差内）</li>
-                        <li>✓ IPG 变换后 max_t ||u'(t) - u'(0)|| < 1e-10</li>
-                        <li>✓ 所有 CG+IPG 规范可被 pyquda_utils.io.readNERSCGauge 正确读取</li>
-                        <li>✓ 原始 CG 系综保持不变</li>
-                        <li>✓ 所有定义级验证指标在容差范围内</li>
+                        <li>✓ Each projected u(t) satisfies unitarity and det = 1 within tolerance</li>
+                        <li>✓ The target matrix C satisfies unitarity and det = 1 within tolerance</li>
+                        <li>✓ After IPG transformation, max_t ||u'(t) - u'(0)|| < 1e-10</li>
+                        <li>✓ All CG+IPG gauges can be read correctly by pyquda_utils.io.readNERSCGauge</li>
+                        <li>✓ The original CG ensembles remain unchanged</li>
+                        <li>✓ All definition-level validation metrics are within tolerance</li>
                     </ul>
                 </div>
             </section>
