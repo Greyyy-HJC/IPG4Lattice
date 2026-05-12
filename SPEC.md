@@ -2,7 +2,7 @@
 
 ## Summary
 - Goal: produce a new `CG+IPG` ensemble set from the existing `ensemble/S16T16_cg/gauge/wilson_b6.cg.*` inputs while leaving the original CG-fixed ensemble untouched.
-- Runtime: default to repository-root `.venv`; use `environment.yml` only as an optional machine-specific CUDA/MPI template.
+- Runtime: use `environment.yml` only as an optional machine-specific CUDA/MPI template.
 - Scope v1: only `S16T16_cg`.
 - Validation approach: definition-level validation via [`scripts/validate_cg_ipg.py`](/home/jinchen/git/anl/IPG4Lattice/scripts/validate_cg_ipg.py), which rebuilds the Appendix A transform directly from the original CG gauge and checks the written CG+IPG gauge against metrics including `post_spread`, `boundary`, `residual`, `target_dev`, and `reconstruct`. Quark-propagator scripts are kept as supplementary physics sanity checks.
 

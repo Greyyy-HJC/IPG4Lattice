@@ -20,7 +20,7 @@ if not os.path.exists(".cache"):
     print("Created .cache directory for PyQUDA resources")
 
 
-ensemble = "S32T32_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S32T32_cg_ipg"
+ensemble = "S16T16_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S32T32_cg_ipg"
 
 
 init([1, 1, 1, 1], resource_path=".cache")
@@ -33,7 +33,7 @@ csw_r = 1.02868
 csw_t = 1.02868
 multigrid = None # [[4, 4, 4, 4], [2, 2, 2, 8]]
 
-latt_size = [32, 32, 32, 32]
+latt_size = [16, 16, 16, 16]
 latt_info = core.LatticeInfo(latt_size, -1, xi_0 / nu)
 dirac = core.getClover(latt_info, mass, 1e-12, 10000, xi_0, csw_r, csw_t, multigrid)
 is_root = latt_info.mpi_rank == 0

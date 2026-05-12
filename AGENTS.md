@@ -46,7 +46,6 @@ Turn tasks into verifiable outcomes.
 
 ## Project-Specific Rules
 
-- Use repository-root `.venv` as the default Python environment (`python3 -m venv .venv`).
 - Keep `requirements.txt` aligned with direct Python dependencies needed by scripts and tests.
 - Treat `environment.yml` as an optional machine-specific template for CUDA/MPI stacks, not the default workflow.
 - Preserve input CG ensembles; write IPG outputs to separate output roots.
