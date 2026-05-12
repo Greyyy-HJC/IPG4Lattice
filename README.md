@@ -28,7 +28,7 @@ In practice, `PyQUDA` and CUDA/MPI compatibility are machine-dependent, so `envi
 
 ## Repository layout
 
-- `progress_report.html`: project progress summary for browsers. Open it from the **clone root** (same directory as `artifacts/`) when using `file://` so embedded PDF links work in Safari; or serve the repo with `python3 -m http.server` and open `http://localhost:8000/progress_report.html`.
+- `progress_report.html`: browser-friendly project progress summary (PDF links under `artifacts/plots/`).
 - `doc/1204.0716v2.pdf`: reference paper.
 - `scripts/ipg_utils.py`: shared IPG and validation helpers.
 - `scripts/ipg_fix.py`: batch CG -> CG+IPG fixing script.

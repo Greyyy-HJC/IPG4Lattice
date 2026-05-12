@@ -19,5 +19,5 @@ Append-only development history for `IPG4Lattice`.
 
 ## 2026-05-12
 
-- Moved `presentation/progress_report.html` to repository-root `progress_report.html` and restored PDF `href`s to `artifacts/plots/...` so Safari `file://` users are not blocked by WebKit’s parent-directory sandbox when opening PDFs.
-- Added `presentation/README.md` explaining the move and the `python3 -m http.server` alternative.
+- Moved the progress report from `presentation/progress_report.html` to repository-root `progress_report.html` with `artifacts/plots/...` links so local `file://` PDFs work in Safari.
+- Removed the `presentation/` directory and shortened the `README.md` bullet and report header (no extra viewing note).
