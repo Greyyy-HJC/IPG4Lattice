@@ -11,3 +11,8 @@ Append-only development history for `IPG4Lattice`.
 - Removed `.codex` from git tracking (`git rm --cached .codex`) while keeping it ignored locally.
 - Fixed `scripts/qprop_static.py`: re-enabled `point_quark_corr_z.append` so jackknife/plots match the still-computed point propagator (empty list had caused `ValueError` in `jk_ls_avg`).
 - Added `tests/validate_S16T16_cg_ipg_gauge.sh` to run `scripts/validate_cg_ipg.py` on `ensemble/S16T16_cg` vs `ensemble/S16T16_cg_ipg` with fixed paths and tolerances.
+- Added `scripts/qprop_fig3_mass.py` for fresh Fig. 3-style `M(|k|)` mass scans from `S16T16_cg_ipg` gauge files, with lattice-unit plotting and configurable bare clover masses.
+- Extended `scripts/qprop_fig3_mass.py` to infer `S32T32` lattice sizes, optionally plot in GeV via `--a-fm`, and restrict analysis to middle-momentum windows with `--min-k-*`, `--max-k-*`, and `--skip-k-bins`.
+- Added a default spatial physical-branch mode cut to `scripts/qprop_fig3_mass.py` so `sin(p)`-degenerate doubler shells are not averaged into the Fig. 3-style mass-function bins.
+- Trimmed `presentation/progress_report.html` so the HTML progress report omits Fig. 3 / `qprop_fig3_mass` narrative and plot gallery (four test categories in the summary).
+- Tracked `scripts/qprop_fig3_mass.py` and the `artifacts/plots/qprop_fig3_mass_*.pdf` figures in git for reproducibility (the progress-report HTML intentionally does not highlight this workflow).

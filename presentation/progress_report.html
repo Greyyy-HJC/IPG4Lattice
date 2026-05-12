@@ -338,7 +338,7 @@
                         <div class="test-stat-label">Lattice Sizes</div>
                     </div>
                     <div class="test-stat">
-                        <span class="test-stat-number">5</span>
+                        <span class="test-stat-number">4</span>
                         <div class="test-stat-label">Test Categories</div>
                     </div>
                     <div class="test-stat">
@@ -537,28 +537,6 @@
                     <p style="margin-top: 15px;"><strong>Result:</strong><span class="badge badge-success">Green's functions show the expected Dirac structure</span></p>
                     <p>The trace of G_Γ(p) encodes the inverse-propagator dressing functions A_s, A_t, and B_m (reference Eq. 20), which should be approximately independent of p4.</p>
                 </div>
-                
-                <h3>5. Mass Extraction and Comparison Test (<code>qprop_fig3_mass.py</code>)</h3>
-                <div class="highlight-box">
-                    <p><strong>Test Content:</strong></p>
-                    <ul>
-                        <li>Fresh Fig. 3-style mass function <code>M(|k|)</code> from CG+IPG gauges (no reuse of cached <code>.npz</code>)</li>
-                        <li>Cylindrical momentum truncation, BiCGstab solves, and lattice-unit or optional GeV axes</li>
-                        <li>Configurable bare clover mass scans and output filename tags for systematic comparisons</li>
-                    </ul>
-                    <p style="margin-top: 15px;"><strong>Test Ensembles:</strong></p>
-                    <span class="badge badge-info">S16T16_cg_ipg</span>
-                    <span class="badge badge-info">S32T32_cg_ipg</span>
-                    <p style="margin-top: 15px;"><strong>Recent workflow options:</strong></p>
-                    <ul>
-                        <li><code>--latt-size auto</code> infers <code>Lx,Ly,Lz,Lt</code> from labels such as <code>S32T32</code></li>
-                        <li><code>--a-fm</code> plots <code>|k|</code> and <code>M</code> in GeV when a lattice spacing is supplied</li>
-                        <li>Momentum-window controls: <code>--min-k-latt</code> / <code>--max-k-latt</code>, <code>--min-k-gev</code> / <code>--max-k-gev</code>, <code>--skip-k-bins</code>, <code>--max-k-bins</code></li>
-                        <li>Default <code>--max-mode-fraction 0.25</code> restricts spatial Fourier modes before binning to the physical branch and avoids averaging <code>sin(p)</code>-degenerate doubler shells into the same <code>|k|</code> bins</li>
-                    </ul>
-                    <p style="margin-top: 15px;"><strong>Configuration count (typical):</strong> 50 on S16T16; S32T32 studies use fewer configs in some tagged scans (for example <code>n5</code> / <code>n20</code> in output names) for faster iteration.</p>
-                    <p style="margin-top: 10px;"><strong>Result:</strong><span class="badge badge-success">Mass curves are reproducible; S32T32 runs extend the same pipeline to larger volume with controlled momentum bins</span></p>
-                </div>
             </section>
             
             <!-- Key Results -->
@@ -597,13 +575,6 @@
                         <p><strong>Hypercubic Smearing Impact:</strong></p>
                         <p style="font-size: 0.95em; margin-top: 10px;">Compare results with and without hypercubic smearing to evaluate its effect on the propagators.</p>
                         <span class="badge badge-info" style="margin-top: 10px;">Systematic study</span>
-                    </div>
-                    
-                    <div class="status-card">
-                        <h4>Fig. 3 Mass Function (S32T32)</h4>
-                        <p><strong>Extended pipeline:</strong></p>
-                        <p style="font-size: 0.95em; margin-top: 10px;">The same <code>qprop_fig3_mass.py</code> driver now supports auto lattice inference, optional GeV axes, middle-<code>|k|</code> windows, and a default spatial mode cut that keeps doubler-degenerate shells out of the binned mass function.</p>
-                        <span class="badge badge-success" style="margin-top: 10px;">Larger-volume-ready</span>
                     </div>
                 </div>
             </section>
@@ -1010,65 +981,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Mass Extraction -->
-                <button type="button" class="collapsible">Mass Extraction (Fig. 3) - 8 Example PDFs</button>
-                <div class="collapsible-content">
-                    <div class="collapsible-content-inner">
-                        <h4>S16T16 CG+IPG</h4>
-                        <div class="plot-gallery">
-                            <div class="plot-item">
-                                <p><strong>Mass scan (default tag)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;">Fig. 3-style <code>M(|k|)</code></p>
-                                <a href="artifacts/plots/qprop_fig3_mass_S16T16_cg_ipg_mass_scan.pdf" class="plot-link">View PDF</a>
-                            </div>
-                        </div>
-                        
-                        <h4 style="margin-top: 30px;">S32T32 CG+IPG (representative tagged runs)</h4>
-                        <div class="plot-gallery">
-                            <div class="plot-item">
-                                <p><strong>Mass scan</strong></p>
-                                <p style="font-size: 0.85em; color: #999;"><code>a=0.1</code> fm, middle <code>|k|</code> window</p>
-                                <a href="artifacts/plots/qprop_fig3_mass_S32T32_cg_ipg_n20_mass_scan_a0p1_k0p5_3p0.pdf" class="plot-link">View PDF</a>
-                            </div>
-                            <div class="plot-item">
-                                <p><strong>Single mass (n20)</strong></p>
-                                <p style="font-size: 0.85em; color: #999;"><code>m=-0.038888</code></p>
-                                <a href="artifacts/plots/qprop_fig3_mass_S32T32_cg_ipg_n20_m003888_a0p1_k0p5_3p0.pdf" class="plot-link">View PDF</a>
-                            </div>
-                            <div class="plot-item">
-                                <p><strong>Mass tune (n5)</strong></p>
-                                <a href="artifacts/plots/qprop_fig3_mass_S32T32_cg_ipg_n5_mass_tune_a0p1_k0p5_3p0.pdf" class="plot-link">View PDF</a>
-                            </div>
-                            <div class="plot-item">
-                                <p><strong>Projection check (n5)</strong></p>
-                                <a href="artifacts/plots/qprop_fig3_mass_S32T32_cg_ipg_n5_projcheck_a0p1_k0p5_3p0.pdf" class="plot-link">View PDF</a>
-                            </div>
-                            <div class="plot-item">
-                                <p><strong>Exact tree (n5)</strong></p>
-                                <a href="artifacts/plots/qprop_fig3_mass_S32T32_cg_ipg_n5_exacttree_a0p1_k0p5_3p0.pdf" class="plot-link">View PDF</a>
-                            </div>
-                            <div class="plot-item">
-                                <p><strong>Middle-<code>|k|</code> (GeV axis)</strong></p>
-                                <a href="artifacts/plots/qprop_fig3_mass_S32T32_cg_ipg_mid_a0p1.pdf" class="plot-link">View PDF</a>
-                            </div>
-                            <div class="plot-item">
-                                <p><strong>K-bin debug</strong></p>
-                                <a href="artifacts/plots/qprop_fig3_mass_S32T32_cg_ipg_debug_kbin.pdf" class="plot-link">View PDF</a>
-                            </div>
-                        </div>
-                        <div class="highlight-box" style="margin-top: 20px;">
-                            <p><strong>Test Details (S16T16 baseline):</strong></p>
-                            <ul>
-                                <li>Use 50 configurations</li>
-                                <li>Construct 65,536 four-momenta, with 1,696 retained after cylindrical truncation</li>
-                                <li>The BiCGstab solver converges in ~18 iterations</li>
-                                <li>The relative residual reaches ~1e-9, compared with the 1e-8 requirement</li>
-                            </ul>
-                            <p style="margin-top: 12px;"><strong>Note:</strong> S32T32 PDFs are produced with the same script using <code>--ensemble</code>, <code>--gauge-dir</code>, and the momentum or GeV options above; filenames encode tags such as <code>n5</code> / <code>n20</code> for the number of configurations used.</p>
-                        </div>
-                    </div>
-                </div>
             </section>
             
             <!-- Technical Details -->
@@ -1121,7 +1033,6 @@
                             <li>Multi-size ensemble tests</li>
                             <li>Complete quark-propagator analysis</li>
                             <li>Comparative study of smearing schemes</li>
-                            <li>Fig. 3 mass-function pipeline on S16T16 and S32T32 with doubler-safe binning options</li>
                         </ul>
                     </div>
                     

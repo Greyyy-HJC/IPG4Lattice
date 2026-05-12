@@ -109,7 +109,7 @@ max_t ||u'(t) - u'(0)|| < 1e-10
   - `residual`: maximum violation of `g(t) u(t) g†(t+1) = C` must be below `--boundary-tol`.
   - `reconstruct`: maximum link-wise difference between the written CG+IPG gauge and the gauge reconstructed from the original CG gauge must be below `--reconstruct-tol`.
   - Default tolerances are `1e-10` for all three thresholds.
-  - Quark-propagator agreement checks (temporal propagator, momentum-projected correlator, momentum-space Green's functions) are carried out as supplementary physics sanity checks via `scripts/qprop_static.py`, `scripts/qprop_mom.py`, and `scripts/qprop_greens.py`.
+  - Quark-propagator agreement checks (temporal propagator, momentum-projected correlator, momentum-space Green's functions, and fresh Fig. 3-style mass scans) are carried out as supplementary physics sanity checks via `scripts/qprop_static.py`, `scripts/qprop_mom.py`, `scripts/qprop_greens.py`, and `scripts/qprop_fig3_mass.py`.
 
 ## Cached analysis data
 
@@ -117,7 +117,10 @@ The quark-propagator scripts cache their raw per-configuration results in `artif
 
 - `artifacts/data/qprop_static_{ensemble}.npz`: wall-source tdir correlator `wall_quark_corr_t` (shape `N_conf × Lt`, real) and point-source zdir correlator `point_quark_corr_z` (shape `N_conf × Lz`, real).
 - `artifacts/data/qprop_greens_{ensemble}.npz`: complex Green's function arrays keyed by gamma name (`I`, `gX`, `gY`, `gZ`, `gT`), each of shape `(N_conf, n_mom)`, plus `momentum_list`, `momentum_label`, and `latt_size`.
+- `artifacts/data/qprop_fig3_mass_{ensemble}_{tag}.npz`: fresh run record from `scripts/qprop_fig3_mass.py`, including selected gauge files, bare mass scan values, shell/bin averages, and jackknife errors. This script never reads existing `.npz` files as input.
 
 ## Notes
 - IPG only constrains the spatially-averaged temporal links `u(t)`. Consequently, only the spatially-averaged time-direction quark propagator (wall source → spatial-sum sink) carries a clean signal after IPG. This motivates the wall-source choice in both `qprop_static.py` and `qprop_mom.py`. In `qprop_mom.py` a momentum wall source (wall × exp(±ip·x) phase) is used for each momentum, giving L³ better statistics than a single point source at the cost of one inversion per momentum.
 - `scripts/ipg_utils.py` uses `scipy.linalg.logm/expm` to build the matrix `T`-th root and then projects the result back to `SU(3)` to control numerical drift.
+- The current `S16T16` ensemble has no scale setting in this repository. Fig. 3-style mass scans therefore use lattice units, and clover `mass` values are treated as exploratory bare parameters rather than physical quark masses.
+- `scripts/qprop_fig3_mass.py` applies a default spatial physical-branch cut, `|n_i| <= L_i/4`, before grouping by `sin(p)` momentum magnitude. This prevents low-momentum shells from being averaged with Brillouin-zone-edge doubler shells that have the same `sin(p)` but very different Wilson scalar terms.
