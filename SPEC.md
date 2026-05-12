@@ -2,9 +2,15 @@
 
 ## Summary
 - Goal: produce a new `CG+IPG` ensemble set from the existing `ensemble/S16T16_cg/gauge/wilson_b6.cg.*` inputs while leaving the original CG-fixed ensemble untouched.
-- Runtime: all scripts are expected to run under `conda activate pygpt`.
+- Runtime: default to repository-root `.venv`; use `environment.yml` only as an optional machine-specific CUDA/MPI template.
 - Scope v1: only `S16T16_cg`.
 - Validation approach: definition-level validation via [`scripts/validate_cg_ipg.py`](/home/jinchen/git/anl/IPG4Lattice/scripts/validate_cg_ipg.py), which rebuilds the Appendix A transform directly from the original CG gauge and checks the written CG+IPG gauge against metrics including `post_spread`, `boundary`, `residual`, `target_dev`, and `reconstruct`. Quark-propagator scripts are kept as supplementary physics sanity checks.
+
+## Documentation map
+- Human entry point: [`README.md`](/home/jinchen/git/anl/IPG4Lattice/README.md)
+- Project structure and behavior spec: [`SPEC.md`](/home/jinchen/git/anl/IPG4Lattice/SPEC.md)
+- Agent workflow and editing rules: [`AGENTS.md`](/home/jinchen/git/anl/IPG4Lattice/AGENTS.md)
+- Append-only development history: [`PROJECT_LOG.md`](/home/jinchen/git/anl/IPG4Lattice/PROJECT_LOG.md)
 
 ## Integrated Polyakov Gauge
 - Start from a Coulomb-gauge-fixed ensemble. Coulomb gauge is assumed complete before IPG runs.

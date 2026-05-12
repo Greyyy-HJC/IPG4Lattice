@@ -7,15 +7,24 @@ Utilities and notes for implementing the Integrated Polyakov gauge (IPG) on top 
 - `v1` targets the `S16T16` Coulomb-gauge-fixed ensemble in `ensemble/S16T16_cg/gauge`.
 - The source paper is [`doc/1204.0716v2.pdf`](/home/jinchen/git/anl/IPG4Lattice/doc/1204.0716v2.pdf), especially Appendix A.
 - The detailed project spec is in [`SPEC.md`](/home/jinchen/git/anl/IPG4Lattice/SPEC.md).
+- Agent workflow and coding rules are in [`AGENTS.md`](/home/jinchen/git/anl/IPG4Lattice/AGENTS.md), with development history in [`PROJECT_LOG.md`](/home/jinchen/git/anl/IPG4Lattice/PROJECT_LOG.md).
 
 ## Environment
 
-The repository now includes two environment descriptions:
+Default workflow uses a repository-local Python virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Environment files:
 
 - [`requirements.txt`](/home/jinchen/git/anl/IPG4Lattice/requirements.txt): Python packages used by the current scripts.
-- [`environment.yml`](/home/jinchen/git/anl/IPG4Lattice/environment.yml): a conda environment template including MPI/CUDA-related base packages.
+- [`environment.yml`](/home/jinchen/git/anl/IPG4Lattice/environment.yml): optional conda template including MPI/CUDA-related base packages.
 
-In practice, `PyQUDA` and CUDA/MPI compatibility are machine-dependent, so `environment.yml` should be treated as a starting point rather than a guaranteed one-command setup on every system.
+In practice, `PyQUDA` and CUDA/MPI compatibility are machine-dependent, so `environment.yml` should be treated as a machine-specific starting point rather than a guaranteed one-command setup.
 
 ## Repository layout
 
