@@ -16,3 +16,8 @@ Append-only development history for `IPG4Lattice`.
 - Added a default spatial physical-branch mode cut to `scripts/qprop_fig3_mass.py` so `sin(p)`-degenerate doubler shells are not averaged into the Fig. 3-style mass-function bins.
 - Trimmed `presentation/progress_report.html` so the HTML progress report omits Fig. 3 / `qprop_fig3_mass` narrative and plot gallery (four test categories in the summary).
 - Tracked `scripts/qprop_fig3_mass.py` and the `artifacts/plots/qprop_fig3_mass_*.pdf` figures in git for reproducibility (the progress-report HTML intentionally does not highlight this workflow).
+
+## 2026-05-12
+
+- Moved `presentation/progress_report.html` to repository-root `progress_report.html` and restored PDF `href`s to `artifacts/plots/...` so Safari `file://` users are not blocked by WebKit’s parent-directory sandbox when opening PDFs.
+- Added `presentation/README.md` explaining the move and the `python3 -m http.server` alternative.
