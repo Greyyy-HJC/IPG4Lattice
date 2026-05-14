@@ -46,8 +46,8 @@ gT = gamma.gamma(8)
 
 # Spatial momentum phases (3-momenta); at p=(0,0,0) the effective mass
 # agrees with qprop_static's tdir (absolute value differs by L^3).
-momentum_list = [[0, 0, 0], [0, 0, 2], [0, 0, 4], [0, 0, 6], [0, 0, 8]]
-momentum_label = ["(0,0,0)", "(0,0,2)", "(0,0,4)", "(0,0,6)", "(0,0,8)"]
+momentum_list = [[0, 0, 0], [2, 2, 2], [4, 4, 4], [6, 6, 6]]
+momentum_label = ["(0,0,0)", "(2,2,2)", "(4,4,4)", "(6,6,6)"]
 momentum_array = np.asarray(momentum_list, dtype=np.float64)
 momentum_phases = MomentumPhase(latt_info).getPhases(momentum_list)
 

@@ -26,3 +26,4 @@ Append-only development history for `IPG4Lattice`.
 
 - Added `tests/static_potential_scale.py` to measure on-axis Wilson loops for `S16T16`/`S16T16_cg_ipg`, fit the static potential, plot the Cornell fit, and estimate `a` from the Sommer `r0` scale.
 - Updated `SPEC.md` to require PDF-only analysis figures and prohibit generated PNG figures.
+- Added `tests/qprop_dressing.py` post-processing to convert momentum-space quark propagator traces into Eq. 20 inverse-propagator dressing functions `As`, `At`, `Bm`, and `M = Bm / As` using `a = 0.11 fm`.
