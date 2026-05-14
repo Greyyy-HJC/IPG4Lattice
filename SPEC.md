@@ -61,6 +61,7 @@ U'4(x, t) = g(t) U4(x, t) g†(t + 1)
 - Output ensemble: `ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.*`
 - Optional residual transform archive: `ensemble/S16T16_cg_ipg/ipg_transform/*.npy`
 - Original input directories are read-only by project convention.
+- Analysis figures must be written as PDF files only; do not generate PNG figures.
 
 ## Implementation Layout
 - [`scripts/ipg_utils.py`](/home/jinchen/git/anl/IPG4Lattice/scripts/ipg_utils.py)

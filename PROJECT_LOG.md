@@ -21,3 +21,8 @@ Append-only development history for `IPG4Lattice`.
 
 - Moved the progress report from `presentation/progress_report.html` to repository-root `progress_report.html` with `artifacts/plots/...` links so local `file://` PDFs work in Safari.
 - Removed the `presentation/` directory and shortened the `README.md` bullet and report header (no extra viewing note).
+
+## 2026-05-14
+
+- Added `tests/static_potential_scale.py` to measure on-axis Wilson loops for `S16T16`/`S16T16_cg_ipg`, fit the static potential, plot the Cornell fit, and estimate `a` from the Sommer `r0` scale.
+- Updated `SPEC.md` to require PDF-only analysis figures and prohibit generated PNG figures.
