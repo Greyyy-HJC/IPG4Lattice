@@ -47,7 +47,7 @@ gamma_ops = [("I", I), ("gX", gX), ("gY", gY), ("gZ", gZ), ("gT", gT)]
 
 # 4-momenta: spatial × temporal (temporal up to T/2 for better pole-mass fit)
 spatial_momenta = [[0, 0, 0], [2, 2, 2], [4, 4, 4], [6, 6, 6]]
-temporal_momenta = [0, 2, 4, 6, 8]
+temporal_momenta = [0, 2, 4, 6]
 momentum_list = [[px, py, pz, pt] for px, py, pz in spatial_momenta for pt in temporal_momenta]
 momentum_label = [f"({px},{py},{pz},{pt})" for px, py, pz, pt in momentum_list]
 momentum_array = np.asarray(momentum_list, dtype=np.float64)
@@ -59,7 +59,9 @@ latt_extent = np.asarray(latt_size, dtype=np.float64)
 momentum_angles = 2 * np.pi * momentum_array / latt_extent
 p_phys_mu = momentum_angles / lattice_spacing_fm * hbarc_GeV_fm
 k_mu = np.sin(momentum_angles)
+wilson_spatial_term = np.sum(1 - np.cos(momentum_angles[:, :3]), axis=1)
 a_GeV_inv = lattice_spacing_fm / hbarc_GeV_fm
+k_tol = 1e-12
 Nc = 3
 Ns = 4
 
@@ -81,9 +83,9 @@ def dressing_from_greens(greens_by_gamma):
 
         As_components = np.stack(
             [
-                np.where(k_mu[:, 0] != 0, 1j * coeff_inv_x / (a_GeV_inv * k_mu[:, 0]), np.nan),
-                np.where(k_mu[:, 1] != 0, 1j * coeff_inv_y / (a_GeV_inv * k_mu[:, 1]), np.nan),
-                np.where(k_mu[:, 2] != 0, 1j * coeff_inv_z / (a_GeV_inv * k_mu[:, 2]), np.nan),
+                np.where(np.abs(k_mu[:, 0]) > k_tol, 1j * coeff_inv_x / k_mu[:, 0], np.nan),
+                np.where(np.abs(k_mu[:, 1]) > k_tol, 1j * coeff_inv_y / k_mu[:, 1], np.nan),
+                np.where(np.abs(k_mu[:, 2]) > k_tol, 1j * coeff_inv_z / k_mu[:, 2], np.nan),
             ]
         )
         As_valid = ~np.isnan(As_components)
@@ -91,11 +93,12 @@ def dressing_from_greens(greens_by_gamma):
         As = np.full(c_m.shape, np.nan, dtype=np.complex128)
         As_sum = np.nansum(As_components, axis=0)
         As[As_count > 0] = As_sum[As_count > 0] / As_count[As_count > 0]
-        At = np.where(k_mu[:, 3] != 0, 1j * coeff_inv_t / (a_GeV_inv * k_mu[:, 3]), np.nan)
+        At = np.where(np.abs(k_mu[:, 3]) > k_tol, 1j * coeff_inv_t / k_mu[:, 3], np.nan)
         Bm = c_m / denom
         M = Bm / As
+        M_corr = (Bm - wilson_spatial_term) / As
 
-    return {"As": As, "At": At, "Bm": Bm, "M": M}
+    return {"As": As, "At": At, "Bm": Bm, "M": M, "M_corr": M_corr}
 
 
 N_src = 4
@@ -104,7 +107,7 @@ if is_root:
     print(f"Using {N_src} random source positions per config, temporal momenta n4 = {temporal_momenta}")
 
 # Accumulate Eq. 20 inverse-propagator dressing functions across configurations.
-point_quark_dressing = {"As": [], "At": [], "Bm": [], "M": []}
+point_quark_dressing = {"As": [], "At": [], "Bm": [], "M": [], "M_corr": []}
 
 for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
 
@@ -161,8 +164,10 @@ if is_root:
         momentum_label=np.asarray(momentum_label),
         latt_size=np.asarray(latt_size),
         lattice_spacing_fm=np.asarray(lattice_spacing_fm),
+        a_GeV_inv=np.asarray(a_GeV_inv),
         p_phys_mu=p_phys_mu,
         k_mu=k_mu,
+        wilson_spatial_term=wilson_spatial_term,
     )
     for dressing_name in point_quark_dressing:
         cache_dict[dressing_name] = np.asarray(point_quark_dressing[dressing_name])
