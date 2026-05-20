@@ -1,105 +1,80 @@
 # %%
+"""Staggered momentum-wall tdir quark propagator on CG+IPG ensembles.
+
+One staggered inversion per spatial momentum; wall source with ``exp(-ip·x)`` phase.
+Caches correlators to ``artifacts/data/qprop_mom_{ensemble}.npz`` and plots effective masses.
+"""
+
+from __future__ import annotations
+
 import os
+import sys
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(SCRIPT_DIR)
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
 import gvar as gv
-from pyquda import init
-from pyquda_utils import core, io, source, gamma
-from pyquda_utils.phase import MomentumPhase
-from opt_einsum import contract
-
-from tqdm.auto import tqdm
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+from pyquda import init
+from pyquda_utils import core, io
+from tqdm.auto import tqdm
 
+from lametlat.preprocess.read_raw import pt2_to_meff
 from lametlat.utils.plot_settings import *
 from lametlat.utils.resampling import *
-from lametlat.preprocess.read_raw import pt2_to_meff
 
+from scripts.qprop_utils import (
+    GAMMA_NAMES,
+    QPROP_MOM_SPATIAL,
+    gauge_path,
+    lattice_size_for_ensemble,
+    staggered_eta_ops,
+    staggered_wall_corr_t_by_gamma,
+)
 
-if not os.path.exists(".cache"):
-    os.makedirs(".cache")
-    print("Created .cache directory for PyQUDA resources")
+# --- run parameters ---
+ensemble = "S24T24_cg_ipg"
+N_conf = 50
+mass = -0.038888
+tol = 1e-8
+maxiter = 10000
 
+momentum_list = [list(spatial) for spatial in QPROP_MOM_SPATIAL]
+momentum_label = [f"({px},{py},{pz})" for px, py, pz in QPROP_MOM_SPATIAL]
+momentum_array = np.asarray(momentum_list, dtype=np.float64)
 
-ensemble = "S24T24_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S24T24_cg_ipg", "S32T32_cg_ipg"
+cache_dir = os.path.join(ROOT, ".cache")
+os.makedirs(cache_dir, exist_ok=True)
+init([1, 1, 1, 1], resource_path=cache_dir)
 
-
-init([1, 1, 1, 1], resource_path=".cache")
-N_conf = 50  # Number of configurations to process
-
-# Lattice parameters
-xi_0, nu = 1.0, 1.0
-mass = -0.038888 # kappa = 0.12623
-csw_r = 1.02868
-csw_t = 1.02868
-multigrid = None # [[4, 4, 4, 4], [2, 2, 2, 8]]
-
-latt_size = [24, 24, 24, 24]
-latt_info = core.LatticeInfo(latt_size, -1, xi_0 / nu)
-dirac = core.getClover(latt_info, mass, 1e-12, 10000, xi_0, csw_r, csw_t, multigrid)
+latt_size = lattice_size_for_ensemble(ensemble)
+latt_info = core.LatticeInfo(latt_size, -1, 1.0)
+dirac = core.getStaggered(latt_info, mass, tol, maxiter)
 is_root = latt_info.mpi_rank == 0
 
-I = gamma.gamma(0)
-gX = gamma.gamma(1)
-gY = gamma.gamma(2)
-gZ = gamma.gamma(4)
-gT = gamma.gamma(8)
+eta_ops = staggered_eta_ops(latt_info)
+gamma_names = list(GAMMA_NAMES) + ["pDotg"]
 
-# Spatial momentum phases (3-momenta); at p=(0,0,0) the effective mass
-# agrees with qprop_static's tdir (absolute value differs by L^3).
-momentum_list = [[0, 0, 0], [2, 2, 2], [4, 4, 4], [6, 6, 6]]
-momentum_label = ["(0,0,0)", "(2,2,2)", "(4,4,4)", "(6,6,6)"]
-momentum_array = np.asarray(momentum_list, dtype=np.float64)
-momentum_phases = MomentumPhase(latt_info).getPhases(momentum_list)
-
-gamma_ops = [("I", I), ("gX", gX), ("gY", gY), ("gZ", gZ), ("gT", gT)]
-# Use momentum wall sources: one inversion per momentum, L^3 better statistics
-# than a single point source. Especially important for the IPG ensemble where
-# IPG constrains spatially-averaged links — the wall-source signal is much cleaner.
-wall_quark_corr_t_by_gamma = {gamma_name: [] for gamma_name, _ in gamma_ops}
-wall_quark_corr_t_by_gamma["pDotg"] = []
+wall_quark_corr_t_by_gamma = {name: [] for name in gamma_names}
 
 for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_root):
-    if ensemble == "S16T16":
-        gauge = io.readNERSCGauge(f"ensemble/S16T16/wilson_b6.{cfg}")
-    elif ensemble == "S16T16_cg":
-        gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
-    elif ensemble == "S16T16_cg_ipg":
-        gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
-    elif ensemble == "S24T24_cg_ipg":
-        gauge = io.readNERSCGauge(
-            f"ensemble/S24T24_cg_ipg/gauge/wilson_b6.cg.ipg.1e-14.{cfg}"
-        )
-    elif ensemble == "S32T32_cg_ipg":
-        gauge = io.readNERSCGauge(f"ensemble/S32T32_cg_ipg/gauge/wilson_b5_95_fixed.{cfg}.ipg")
-
-    # gauge.stoutSmear(1, 0.125, 4)
+    gauge = io.readNERSCGauge(gauge_path(ensemble, cfg))
 
     with dirac.useGauge(gauge):
-        # One wall-source inversion per momentum.
-        # Source phase: exp(-ip·x_src), sink phase: exp(+ip·x_snk).
-        # By translation invariance this equals L^3 * C_point(t, p), with
-        # sqrt(L^3) better SNR due to averaging over all spatial source sites.
-        cfg_corr = {gamma_name: [] for gamma_name, _ in gamma_ops}
+        cfg_corr = {name: [] for name in GAMMA_NAMES}
 
-        for p_phase in momentum_phases:
-            wall_source = source.propagator(latt_info, "wall", 0, source_phase=np.conj(p_phase))
-            wall_propag = core.invertPropagator(dirac, wall_source)
-
-            for gamma_name, gamma_matrix in gamma_ops:
-                corr_t = core.gatherLattice(
-                    contract(
-                        "wtzyx,wtzyxijaa,ji->t",
-                        p_phase,
-                        wall_propag.data,
-                        gamma_matrix,
-                    ).get(),
-                    [0, -1, -1, -1],
-                ) 
-                if is_root:
-                    cfg_corr[gamma_name].append(corr_t)
+        for spatial in momentum_list:
+            corr_by_gamma = staggered_wall_corr_t_by_gamma(
+                latt_info, dirac, spatial, eta_ops
+            )
+            if is_root:
+                for gamma_name in GAMMA_NAMES:
+                    cfg_corr[gamma_name].append(corr_by_gamma[gamma_name])
 
         if is_root:
-            # C_{p·g}(p,t) = p_x C_{gX}(p,t) + p_y C_{gY}(p,t) + p_z C_{gZ}(p,t)
             cfg_corr["pDotg"] = [
                 momentum_array[idx, 0] * cfg_corr["gX"][idx]
                 + momentum_array[idx, 1] * cfg_corr["gY"][idx]
@@ -107,22 +82,24 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
                 for idx in range(len(momentum_list))
             ]
             for gamma_name in cfg_corr:
-                # stack to shape (n_mom, Lt) then accumulate over configs
                 wall_quark_corr_t_by_gamma[gamma_name].append(
                     np.stack(cfg_corr[gamma_name])
                 )
 
 if is_root:
-    os.makedirs("artifacts/data", exist_ok=True)
+    os.makedirs(os.path.join(ROOT, "artifacts/data"), exist_ok=True)
+    os.makedirs(os.path.join(ROOT, "artifacts/plots"), exist_ok=True)
     np.savez(
-        f"artifacts/data/qprop_mom_{ensemble}.npz",
+        os.path.join(ROOT, f"artifacts/data/qprop_mom_{ensemble}.npz"),
         **{
             gamma_name: np.asarray(wall_quark_corr_t_by_gamma[gamma_name])
             for gamma_name in wall_quark_corr_t_by_gamma
         },
-        momentum_list=np.asarray(momentum_list),
+        momentum_list=momentum_array,
         momentum_label=np.asarray(momentum_label),
         latt_size=np.asarray(latt_size),
+        fermion=np.asarray("staggered"),
+        bare_mass=np.asarray(mass),
     )
     print(f"Cached to artifacts/data/qprop_mom_{ensemble}.npz")
 
@@ -130,8 +107,6 @@ if is_root:
         try:
             return pt2_to_meff(pt2_array, boundary="periodic")
         except ZeroDivisionError:
-            # Keep plotting/saving even when neighboring points contain zeros.
-            # Matplotlib skips NaNs instead of terminating the whole run.
             print(
                 f"[WARN] ZeroDivision in pt2_to_meff for {gamma_name}, p={mom_label}; "
                 "filling with NaN."
@@ -144,7 +119,7 @@ if is_root:
         point_quark_corr_t_re = np.real(point_quark_corr_t)
         point_quark_corr_t_norm = np.abs(point_quark_corr_t)
         print("max |Im point_quark_corr_t|: ", np.max(np.abs(np.imag(point_quark_corr_t))))
-        print("shape of point_quark_corr_t: ", np.shape(point_quark_corr_t))  # (N_conf, n_mom, Lt)
+        print("shape of point_quark_corr_t: ", np.shape(point_quark_corr_t))
 
         point_quark_corr_t_re_jk_avg = jk_ls_avg(jackknife(point_quark_corr_t_re))
         point_quark_corr_t_norm_jk_avg = jk_ls_avg(jackknife(point_quark_corr_t_norm))
@@ -152,7 +127,9 @@ if is_root:
         fig_re, ax_re = default_plot()
         fig_norm, ax_norm = default_plot()
         for idx, label in enumerate(momentum_label):
-            point_meff_t_re = safe_pt2_to_meff(point_quark_corr_t_re_jk_avg[idx], gamma_name, label)
+            point_meff_t_re = safe_pt2_to_meff(
+                point_quark_corr_t_re_jk_avg[idx], gamma_name, label
+            )
             point_meff_t_norm = safe_pt2_to_meff(
                 point_quark_corr_t_norm_jk_avg[idx], gamma_name, label
             )
@@ -175,23 +152,27 @@ if is_root:
         ax_re.legend(ncol=2, **fs_small_p)
         ax_re.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
         ax_re.set_ylabel(r"$m_{\mathrm{eff}}^{\mathrm{Re}}$", **fs_p)
-        ax_re.set_ylim(-2, 4)
         fig_re.tight_layout()
         fig_re.savefig(
-            f"artifacts/plots/qprop_mom_tdir_meff_re_{ensemble}_{gamma_name}.pdf",
+            os.path.join(
+                ROOT,
+                f"artifacts/plots/qprop_mom_tdir_meff_re_{ensemble}_{gamma_name}.pdf",
+            ),
             transparent=True,
         )
-        plt.show()
+        plt.close(fig_re)
 
         ax_norm.legend(ncol=2, **fs_small_p)
         ax_norm.set_xlabel(r"$n_{\mathrm{sep}}$", **fs_p)
         ax_norm.set_ylabel(r"$m_{\mathrm{eff}}^{\mathrm{Norm}}$", **fs_p)
-        ax_norm.set_ylim(-2, 4)
         fig_norm.tight_layout()
         fig_norm.savefig(
-            f"artifacts/plots/qprop_mom_tdir_meff_norm_{ensemble}_{gamma_name}.pdf",
+            os.path.join(
+                ROOT,
+                f"artifacts/plots/qprop_mom_tdir_meff_norm_{ensemble}_{gamma_name}.pdf",
+            ),
             transparent=True,
         )
-        plt.show()
+        plt.close(fig_norm)
 
 # %%

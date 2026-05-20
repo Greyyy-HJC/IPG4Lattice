@@ -34,7 +34,7 @@ In practice, `PyQUDA` and CUDA/MPI compatibility are machine-dependent, so `envi
 - `scripts/ipg_fix.py`: batch CG -> CG+IPG fixing script.
 - `scripts/validate_cg_ipg.py`: definition-level CG -> CG+IPG validation and diagnostics.
 - `scripts/qprop_static.py`: wall-source tdir and point-source zdir quark propagator. Plots both effective masses and caches raw data to `artifacts/data/`.
-- `scripts/qprop_mom.py`: momentum-wall-source time-direction quark propagator with spatial momentum projection via `MomentumPhase`. One wall-source inversion per momentum (wall source × exp(±ip·x) phase) gives L³ better statistics than a single point source. Plots effective masses for all five gamma insertions (I, gX, gY, gZ, gT) at each momentum.
+- `scripts/qprop_mom.py`: staggered momentum-wall-source time-direction quark propagator with spatial momentum projection via `MomentumPhase`. One wall-source inversion per spatial momentum (wall × exp(±ip·x) phase) gives L³ better statistics than a point source. Plots effective masses for staggered taste insertions (I, gX, gY, gZ, gT) at each momentum.
 - `scripts/qprop_greens.py`: fully Fourier-transformed quark Green's function `G_Gamma(p) = Nc Tr[Gamma S(p)]` at selected 4-momenta (temporal momenta 0..T/2) for all five gamma insertions. Caches complex-valued results to `artifacts/data/`.
 - `scripts/qprop_fig3_mass.py`: fresh Fig. 3-style mass-function scan from CG+IPG gauge files. It does not read existing `.npz` analysis data; outputs are saved only as a record of the run.
 - `scripts/qprop_utils.py`: staggered momentum-space pipeline (wall source + FFT → `G_Γ(p)` → `A_s`/`B_m` → Eq. 25 `M(|k|)`). See module docstring for the step-by-step map.
@@ -104,10 +104,11 @@ The quark-propagator scripts are kept as supplementary physics sanity checks on 
 IPG only constrains the spatially-averaged temporal links `u(t)`, so only the spatially-averaged (wall-source) time-direction quark propagator carries a clean signal after IPG. All tdir propagator scripts therefore use wall sources.
 
 - `scripts/qprop_static.py`: wall-source tdir quark propagator (spatially averaged) plus point-source zdir propagator from the origin. Caches both to `artifacts/data/qprop_static_{ensemble}.npz`.
-- `scripts/qprop_mom.py`: momentum-wall-source tdir quark propagator with spatial momentum projection. For each momentum `p`, uses a wall source at `t=0` with source phase `exp(-ip·x)` and sink phase `exp(+ip·x)`, giving L³ better statistics than a point source. Uses all five gamma insertions (I, gX, gY, gZ, gT) and plots the effective mass for each momentum.
+- `scripts/qprop_mom.py`: **staggered** momentum-wall-source tdir quark propagator with spatial momentum projection. For each momentum `p`, uses a wall source at `t=0` with source phase `exp(-ip·x)` and sink phase `exp(+ip·x)`, giving L³ better statistics than a point source. Uses staggered taste insertions (I, gX, gY, gZ, gT) and plots the effective mass for each momentum.
+- `scripts/qprop_dispersion_check.py`: offline check of `E_eff(p)` vs `√(M(|k|)² + |k|²)` from cached `qprop_mom` and `qprop_M` data (PDF only).
 - `scripts/qprop_greens.py`: fully Fourier-transformed quark Green's function `G_Gamma(p) = Nc Tr[Gamma S(p)]` at selected 4-momenta (temporal momenta `n4 = 0..T/2`) for all five gamma insertions. Caches the complex-valued Green's functions per gamma to `artifacts/data/qprop_greens_{ensemble}.npz`.
 - `scripts/qprop_fig3_mass.py`: remeasures from gauge files and plots `M(|k|)` in lattice units for a bare clover-mass scan. Since the current `S16T16` ensemble has no scale setting, the script intentionally avoids GeV/MeV labels and treats `mass` as a bare input parameter.
-- `scripts/qprop_M.py`: staggered wall-source `M(|k|)` with physical-branch shells and Eq. 25 p4 averaging. Pipeline details in `scripts/qprop_utils.py`. Edit parameters at the top of `qprop_M.py` or use CLI flags.
+- `scripts/qprop_M.py`: staggered wall-source `M(|k|)` with physical-branch shells and Eq. 25 p4 averaging. Pipeline details in `scripts/qprop_utils.py`. Coefficient diagnostics (`As`, `Bm`, pointwise `M(p)`) use a fixed 12-point `(px,py,pz,pt)` grid (4 spatial shells × `pt ∈ {0,4,8}`). Edit parameters at the top of `qprop_M.py` or use CLI flags.
 
 In practice the intended checks are:
 

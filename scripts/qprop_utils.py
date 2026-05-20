@@ -196,31 +196,64 @@ def temporal_indices_for_shell(grid: MomentumGrid, shell_indices: Iterable[int])
     return out
 
 
+# Fixed 4 spatial × 3 temporal modes for A_s / B_m / M(p) diagnostic plots.
+COEFFICIENT_PLOT_SPATIAL: Tuple[Tuple[int, int, int], ...] = (
+    (0, 0, 0),
+    (2, 2, 2),
+    (3, 3, 3),
+    (4, 4, 4),
+)
+COEFFICIENT_PLOT_PT: Tuple[int, ...] = (0, 4, 8)
+
+# Spatial reps for staggered momentum-wall tdir correlators (qprop_mom).
+QPROP_MOM_SPATIAL: Tuple[Tuple[int, int, int], ...] = COEFFICIENT_PLOT_SPATIAL
+
+
+def coefficient_plot_momentum_list() -> np.ndarray:
+    """12 four-momenta: Cartesian product of COEFFICIENT_PLOT_SPATIAL × COEFFICIENT_PLOT_PT."""
+    return np.asarray(
+        [
+            [px, py, pz, pt]
+            for px, py, pz in COEFFICIENT_PLOT_SPATIAL
+            for pt in COEFFICIENT_PLOT_PT
+        ],
+        dtype=np.float64,
+    )
+
+
+def coefficient_plot_indices(grid: MomentumGrid) -> np.ndarray:
+    """Indices into the full momentum grid for the 12-point coefficient/M diagnostic subset."""
+    targets = coefficient_plot_momentum_list()
+    picks: List[int] = []
+    for target in targets:
+        shell_key = orbit_sort_key(target[:3])
+        pt = int(target[3])
+        found = None
+        for idx in range(len(grid.momentum_list)):
+            row = grid.momentum_list[idx]
+            if int(row[3]) != pt:
+                continue
+            if orbit_sort_key(row[:3]) == shell_key:
+                found = idx
+                break
+        if found is None:
+            raise ValueError(
+                f"Coefficient plot shell {shell_key} at pt={pt} "
+                "not found in momentum_list; rerun measurement with default temporal grid."
+            )
+        picks.append(found)
+    return np.asarray(picks, dtype=np.int64)
+
+
 def select_coefficient_plot_indices(
     grid: MomentumGrid,
     *,
     max_mode_fraction: float = 0.25,
     max_points: int = 12,
 ) -> np.ndarray:
-    """Sparse indices for A_s / B_m plots: one p4=0 point per shell, then subsample by |k|."""
-    shells = group_spatial_shells(grid, max_mode_fraction=max_mode_fraction)
-    picks: List[int] = []
-    for shell in shells:
-        idxs = list(shell["indices"])
-        idx_pt0 = next(
-            (i for i in idxs if int(grid.momentum_list[i, 3]) == 0),
-            None,
-        )
-        picks.append(idx_pt0 if idx_pt0 is not None else idxs[0])
-
-    picks_arr = np.asarray(picks, dtype=np.int64)
-    order = np.argsort(grid.k_spatial[picks_arr])
-    sorted_picks = picks_arr[order]
-    if len(sorted_picks) <= max_points:
-        return sorted_picks
-
-    sub = np.linspace(0, len(sorted_picks) - 1, max_points, dtype=np.int64)
-    return sorted_picks[sub]
+    """Return fixed 12-point diagnostic indices (legacy name kept for callers)."""
+    del max_mode_fraction, max_points
+    return coefficient_plot_indices(grid)
 
 
 # --- Staggered greens (wall + FFT) ---
@@ -281,6 +314,36 @@ def invert_wall_propagator(dirac, latt_info, source_phase):
         latt_info, "wall", 0, source_phase=np.conj(source_phase)
     )
     return core.invertStaggeredPropagator(dirac, wall_source)
+
+
+def staggered_wall_corr_t_by_gamma(
+    latt_info,
+    dirac,
+    spatial: Sequence[int],
+    eta_ops: Sequence[Tuple[str, np.ndarray]],
+) -> Dict[str, np.ndarray]:
+    """Time-direction correlators C_Gamma(t, p) from one staggered momentum-wall inversion.
+
+    Source phase ``exp(-ip·x)`` is applied in the inverter; sink momentum ``p`` enters via
+    ``mom_phase`` on the spatial sum (same convention as clover ``qprop_mom``).
+    """
+    p_phase = MomentumPhase(latt_info).getPhases(
+        [[int(spatial[0]), int(spatial[1]), int(spatial[2])]]
+    )[0]
+    propag = invert_wall_propagator(dirac, latt_info, p_phase)
+    out: Dict[str, np.ndarray] = {}
+    for gamma_name, eta_phase in eta_ops:
+        corr_t = contract(
+            "wtzyx,wtzyxaa,wtzyx->t",
+            p_phase,
+            propag.data,
+            eta_phase,
+        ).get()
+        out[gamma_name] = np.asarray(
+            core.gatherLattice(corr_t, [0, -1, -1, -1]),
+            dtype=np.complex128,
+        )
+    return out
 
 
 def greens_from_wall_fft(latt_info, dirac, grid: MomentumGrid, eta_ops) -> Dict[str, np.ndarray]:
@@ -563,6 +626,21 @@ def plot_M_mass_scan(
     plt.close(fig)
 
 
+def pointwise_mass_from_dressing(
+    as_cfg: np.ndarray,
+    bm_cfg: np.ndarray,
+    indices: Sequence[int],
+    *,
+    k_tol: float = 1e-12,
+) -> np.ndarray:
+    """M(p) = B_m(p) / A_s(p) at each listed momentum index (no p4 shell average)."""
+    as_slice = np.asarray(as_cfg[:, indices], dtype=np.complex128)
+    bm_slice = np.asarray(bm_cfg[:, indices], dtype=np.complex128)
+    out = np.full(as_slice.shape, np.nan, dtype=np.complex128)
+    np.divide(bm_slice, as_slice, out=out, where=np.abs(as_slice) > k_tol)
+    return out
+
+
 def plot_coefficient_vs_momentum(
     coeff_name: str,
     values_cfg_mom: np.ndarray,
@@ -572,12 +650,9 @@ def plot_coefficient_vs_momentum(
     max_mode_fraction: float = 0.25,
     max_points: int = 12,
 ) -> None:
-    """Jackknife plot of A_s or B_m vs selected 4-momenta (sparse diagnostic subset)."""
-    plot_idx = select_coefficient_plot_indices(
-        grid,
-        max_mode_fraction=max_mode_fraction,
-        max_points=max_points,
-    )
+    """Jackknife plot of A_s or B_m vs selected 4-momenta (12-point diagnostic subset)."""
+    del max_mode_fraction, max_points
+    plot_idx = coefficient_plot_indices(grid)
     values_re = np.real(values_cfg_mom[:, plot_idx])
     values_im = np.imag(values_cfg_mom[:, plot_idx])
     values_norm = np.abs(values_cfg_mom[:, plot_idx])
@@ -613,6 +688,38 @@ def plot_coefficient_vs_momentum(
     ax.set_xticklabels(labels, rotation=45, ha="right")
     ax.set_xlabel(r"$(p_x, p_y, p_z, p_t)$", **fs_p)
     ax.set_ylabel(rf"${coeff_name}(p)$", **fs_p)
+    ax.legend(**fs_small_p)
+    plt.tight_layout()
+    fig.savefig(output_path, transparent=True)
+    plt.close(fig)
+
+
+def plot_M_vs_momentum(
+    as_cfg: np.ndarray,
+    bm_cfg: np.ndarray,
+    grid: MomentumGrid,
+    output_path: str,
+) -> None:
+    """Jackknife plot of pointwise M(p) = B_m / A_s on the 12-point diagnostic grid."""
+    plot_idx = coefficient_plot_indices(grid)
+    m_cfg = pointwise_mass_from_dressing(as_cfg, bm_cfg, plot_idx)
+    m_re = np.real(m_cfg)
+    m_jk = jk_ls_avg(jackknife(m_re))
+    labels = [grid.momentum_label[i] for i in plot_idx]
+    x_values = np.arange(len(plot_idx))
+
+    fig, ax = default_plot()
+    ax.errorbar(
+        x_values,
+        gv.mean(m_jk),
+        yerr=gv.sdev(m_jk),
+        label=r"$M(p)=\mathrm{Re}(B_m/A_s)$",
+        **errorb,
+    )
+    ax.set_xticks(x_values)
+    ax.set_xticklabels(labels, rotation=45, ha="right")
+    ax.set_xlabel(r"$(p_x, p_y, p_z, p_t)$", **fs_p)
+    ax.set_ylabel(r"$M(p)$ (lattice units)", **fs_p)
     ax.legend(**fs_small_p)
     plt.tight_layout()
     fig.savefig(output_path, transparent=True)
@@ -673,8 +780,15 @@ def write_all_plots(
         os.path.join(plot_dir(), f"qprop_M_{ensemble}_Bm.pdf"),
         **coeff_kwargs,
     )
+    plot_M_vs_momentum(
+        ref["As"],
+        ref["Bm"],
+        grid,
+        os.path.join(plot_dir(), f"qprop_M_{ensemble}_M.pdf"),
+    )
     print(f"Wrote {plot_dir()}/qprop_M_{ensemble}_As.pdf")
     print(f"Wrote {plot_dir()}/qprop_M_{ensemble}_Bm.pdf")
+    print(f"Wrote {plot_dir()}/qprop_M_{ensemble}_M.pdf")
 
 
 def replot_from_npz(

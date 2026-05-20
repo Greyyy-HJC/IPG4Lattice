@@ -60,3 +60,9 @@ Append-only development history for `IPG4Lattice`.
 - Removed [`scripts/qprop_dressing.py`](scripts/qprop_dressing.py) and [`scripts/qprop_M_compare.py`](scripts/qprop_M_compare.py); clover / `M_corr` / point-FFT paths dropped from the active workflow.
 - New artifact names: `artifacts/data/qprop_M_{ensemble}.npz`, `artifacts/plots/qprop_M_{ensemble}.pdf` (+ `_gev`, `_As`, `_Bm`). `--replot-only` reads legacy `qprop_M_staggered_{ensemble}.npz` when present.
 - Verified `--replot-only` on S24T24_cg_ipg from existing 50-config staggered npz.
+
+## 2026-05-20 — Staggered mom propagator + dispersion check
+
+- Refactored [`scripts/qprop_mom.py`](scripts/qprop_mom.py) to **staggered** fermion (`getStaggered`, `staggered_wall_corr_t_by_gamma` in [`scripts/qprop_utils.py`](scripts/qprop_utils.py)); spatial momenta `(0,0,0)`, `(2,2,2)`, `(3,3,3)`, `(4,4,4)` on `S24T24_cg_ipg`.
+- Fixed 12-point coefficient/M diagnostic grid in `qprop_utils`: `COEFFICIENT_PLOT_SPATIAL × COEFFICIENT_PLOT_PT` with shell-orbit matching (negative lattice reps); added [`plot_M_vs_momentum`](scripts/qprop_utils.py) → `artifacts/plots/qprop_M_{ensemble}_M.pdf`.
+- Added [`scripts/qprop_dispersion_check.py`](scripts/qprop_dispersion_check.py): compares `E_eff` from `qprop_mom` with `√(M²+|k|²)` from `qprop_M` caches (PDF only).
