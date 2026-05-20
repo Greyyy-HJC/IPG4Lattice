@@ -52,3 +52,11 @@ Append-only development history for `IPG4Lattice`.
 - Ran `/home/jinchen/miniconda3/envs/pygpt/bin/python scripts/qprop_M.py` on 50 configs and 4 staggered masses; script completed and wrote:
   - `artifacts/data/qprop_M_staggered_S24T24_cg_ipg.npz`
   - `artifacts/plots/qprop_M_staggered_S24T24_cg_ipg.pdf`
+
+## 2026-05-20 — Simplify qprop_M pipeline
+
+- Added [`scripts/qprop_utils.py`](scripts/qprop_utils.py): staggered-only wall_fft measurement, `A_s`/`B_m` projection, physical-branch shells, Eq. 25 `M(|k|)`, plotting (`M`, GeV, `As`, `Bm`); no `ylim` on mass-scan plots.
+- Slimmed [`scripts/qprop_M.py`](scripts/qprop_M.py) to a thin runner (`--ensemble`, `--n-conf`, `--replot-only`); fixed staggered + wall_fft; `reference_mass` for coefficient diagnostics.
+- Removed [`scripts/qprop_dressing.py`](scripts/qprop_dressing.py) and [`scripts/qprop_M_compare.py`](scripts/qprop_M_compare.py); clover / `M_corr` / point-FFT paths dropped from the active workflow.
+- New artifact names: `artifacts/data/qprop_M_{ensemble}.npz`, `artifacts/plots/qprop_M_{ensemble}.pdf` (+ `_gev`, `_As`, `_Bm`). `--replot-only` reads legacy `qprop_M_staggered_{ensemble}.npz` when present.
+- Verified `--replot-only` on S24T24_cg_ipg from existing 50-config staggered npz.

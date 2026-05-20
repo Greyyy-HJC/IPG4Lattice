@@ -20,7 +20,7 @@ if not os.path.exists(".cache"):
     print("Created .cache directory for PyQUDA resources")
 
 
-ensemble = "S16T16_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S32T32_cg_ipg"
+ensemble = "S24T24_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S24T24_cg_ipg", "S32T32_cg_ipg"
 
 
 init([1, 1, 1, 1], resource_path=".cache")
@@ -33,7 +33,7 @@ csw_r = 1.02868
 csw_t = 1.02868
 multigrid = None # [[4, 4, 4, 4], [2, 2, 2, 8]]
 
-latt_size = [16, 16, 16, 16]
+latt_size = [24, 24, 24, 24]
 latt_info = core.LatticeInfo(latt_size, -1, xi_0 / nu)
 dirac = core.getClover(latt_info, mass, 1e-12, 10000, xi_0, csw_r, csw_t, multigrid)
 is_root = latt_info.mpi_rank == 0
@@ -65,6 +65,10 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
     elif ensemble == "S16T16_cg_ipg":
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+    elif ensemble == "S24T24_cg_ipg":
+        gauge = io.readNERSCGauge(
+            f"ensemble/S24T24_cg_ipg/gauge/wilson_b6.cg.ipg.1e-14.{cfg}"
+        )
     elif ensemble == "S32T32_cg_ipg":
         gauge = io.readNERSCGauge(f"ensemble/S32T32_cg_ipg/gauge/wilson_b5_95_fixed.{cfg}.ipg")
 
