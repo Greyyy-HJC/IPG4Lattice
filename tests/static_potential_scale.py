@@ -15,13 +15,16 @@ if not os.path.exists(".cache"):
     print("Created .cache directory for PyQUDA resources")
 
 
-ensemble = "S16T16_cg_ipg"  # "S16T16", "S16T16_cg_ipg"
+ensemble = "S24T24_cg_ipg"  # "S16T16", "S16T16_cg_ipg", "S24T24_cg_ipg"
 
 
 init([1, 1, 1, 1], resource_path=".cache")
 N_conf = 50
 
-latt_size = [16, 16, 16, 16]
+if ensemble == "S24T24_cg_ipg":
+    latt_size = [24, 24, 24, 24]
+else:
+    latt_size = [16, 16, 16, 16]
 r_values = np.arange(1, 8)
 t_values = np.arange(1, 9)
 t_fit_min = 3
@@ -39,6 +42,10 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
         gauge = io.readNERSCGauge(f"ensemble/S16T16/wilson_b6.{cfg}")
     elif ensemble == "S16T16_cg_ipg":
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+    elif ensemble == "S24T24_cg_ipg":
+        gauge = io.readNERSCGauge(
+            f"ensemble/S24T24_cg_ipg/gauge/wilson_b6.cg.ipg.1e-14.{cfg}"
+        )
 
     cfg_wilson_loops = np.zeros((len(r_values), len(t_values)), dtype=np.float64)
 

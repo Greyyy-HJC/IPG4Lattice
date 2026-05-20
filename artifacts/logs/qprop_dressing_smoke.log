@@ -1,0 +1,391 @@
+PyQUDA INFO: Using default grid mapping
+PyQUDA INFO: Using grid size [1, 1, 1, 1]
+PyQUDA INFO: Using cupy with cuda as Array API
+PyQUDA INFO: Using device 0
+PyQUDA INFO: Using QUDA_RESOURCE_PATH=/home/jinchen/git/anl/IPG4Lattice/.cache
+Disabling GPU-Direct RDMA access
+Enabling peer-to-peer copy engine and direct load/store access
+QUDA 1.1.0 (git 1.1.0-e23cd7e4f-sm_86)
+CUDA Driver version = 12020
+CUDA Runtime version = 12020
+Graphic driver version = 535.288.01
+Found device 0: NVIDIA GeForce RTX 3060
+Using device 0: NVIDIA GeForce RTX 3060
+Initializing monitoring on device 0: NVIDIA GeForce RTX 3060
+WARNING: Data reordering done on GPU (set with QUDA_REORDER_LOCATION=GPU/CPU)
+Loaded 149 sets of cached parameters from /home/jinchen/git/anl/IPG4Lattice/.cache/tunecache.tsv
+WARNING: Using device memory pool allocator
+WARNING: Using pinned memory pool allocator
+cublasCreated successfully
+fermion=staggered, bare_mass=-0.038888, 20 4-momenta (4 shells × 5 p4), measurement=fft, dressing=fig3_style
+Processing configurations:   0%|          | 0/50 [00:00<?, ?it/s]CG: Convergence at 472 iterations, L2 relative residual: iterated = 9.733025e-09, true = 9.733025e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.243 secs, Performance = 79.696 GFLOPS
+CG: Convergence at 464 iterations, L2 relative residual: iterated = 9.709628e-09, true = 9.709628e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.099 secs, Performance = 192.695 GFLOPS
+CG: Convergence at 470 iterations, L2 relative residual: iterated = 9.857703e-09, true = 9.857703e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.086 secs, Performance = 224.916 GFLOPS
+Processing configurations:   2%|▏         | 1/50 [00:01<00:51,  1.04s/it]CG: Convergence at 487 iterations, L2 relative residual: iterated = 9.722504e-09, true = 9.722504e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.091 secs, Performance = 218.816 GFLOPS
+CG: Convergence at 486 iterations, L2 relative residual: iterated = 9.832917e-09, true = 9.832917e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 229.864 GFLOPS
+CG: Convergence at 486 iterations, L2 relative residual: iterated = 9.982189e-09, true = 9.982189e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 229.250 GFLOPS
+Processing configurations:   4%|▍         | 2/50 [00:01<00:38,  1.26it/s]CG: Convergence at 504 iterations, L2 relative residual: iterated = 9.884223e-09, true = 9.884223e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.162 secs, Performance = 127.623 GFLOPS
+CG: Convergence at 495 iterations, L2 relative residual: iterated = 9.840787e-09, true = 9.840787e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.101 secs, Performance = 199.918 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.842109e-09, true = 9.842109e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.090 secs, Performance = 226.634 GFLOPS
+Processing configurations:   6%|▌         | 3/50 [00:02<00:37,  1.26it/s]CG: Convergence at 496 iterations, L2 relative residual: iterated = 9.658152e-09, true = 9.658152e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.108 secs, Performance = 187.383 GFLOPS
+CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.702616e-09, true = 9.702616e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.090 secs, Performance = 223.076 GFLOPS
+CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.804766e-09, true = 9.804766e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.084 secs, Performance = 241.459 GFLOPS
+Processing configurations:   8%|▊         | 4/50 [00:03<00:34,  1.35it/s]CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.712869e-09, true = 9.712869e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.073 secs, Performance = 275.563 GFLOPS
+CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.714026e-09, true = 9.714026e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 231.270 GFLOPS
+CG: Convergence at 487 iterations, L2 relative residual: iterated = 9.892052e-09, true = 9.892052e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.091 secs, Performance = 219.616 GFLOPS
+Processing configurations:  10%|█         | 5/50 [00:03<00:32,  1.38it/s]CG: Convergence at 496 iterations, L2 relative residual: iterated = 9.733063e-09, true = 9.733063e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.090 secs, Performance = 225.793 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.762615e-09, true = 9.762615e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 229.411 GFLOPS
+CG: Convergence at 491 iterations, L2 relative residual: iterated = 9.925673e-09, true = 9.925673e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 232.030 GFLOPS
+Processing configurations:  12%|█▏        | 6/50 [00:04<00:30,  1.46it/s]CG: Convergence at 487 iterations, L2 relative residual: iterated = 9.782220e-09, true = 9.782220e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.092 secs, Performance = 216.792 GFLOPS
+CG: Convergence at 506 iterations, L2 relative residual: iterated = 9.758510e-09, true = 9.758510e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.091 secs, Performance = 227.395 GFLOPS
+CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.655468e-09, true = 9.655468e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.180 secs, Performance = 112.612 GFLOPS
+Processing configurations:  14%|█▍        | 7/50 [00:05<00:29,  1.43it/s]CG: Convergence at 504 iterations, L2 relative residual: iterated = 9.708641e-09, true = 9.708641e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 232.543 GFLOPS
+CG: Convergence at 500 iterations, L2 relative residual: iterated = 9.873639e-09, true = 9.873639e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 231.903 GFLOPS
+CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.833491e-09, true = 9.833491e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.078 secs, Performance = 260.455 GFLOPS
+Processing configurations:  16%|█▌        | 8/50 [00:05<00:29,  1.41it/s]CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.766547e-09, true = 9.766547e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.102 secs, Performance = 199.783 GFLOPS
+CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.681075e-09, true = 9.681075e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 230.565 GFLOPS
+CG: Convergence at 495 iterations, L2 relative residual: iterated = 9.752953e-09, true = 9.752953e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 229.158 GFLOPS
+Processing configurations:  18%|█▊        | 9/50 [00:06<00:27,  1.47it/s]CG: Convergence at 491 iterations, L2 relative residual: iterated = 9.631593e-09, true = 9.631593e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 229.747 GFLOPS
+CG: Convergence at 496 iterations, L2 relative residual: iterated = 9.851459e-09, true = 9.851459e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.096 secs, Performance = 212.116 GFLOPS
+CG: Convergence at 490 iterations, L2 relative residual: iterated = 9.948324e-09, true = 9.948324e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 225.165 GFLOPS
+Processing configurations:  20%|██        | 10/50 [00:07<00:28,  1.42it/s]CG: Convergence at 501 iterations, L2 relative residual: iterated = 9.814729e-09, true = 9.814729e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.118 secs, Performance = 174.029 GFLOPS
+CG: Convergence at 504 iterations, L2 relative residual: iterated = 9.872472e-09, true = 9.872472e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.104 secs, Performance = 197.561 GFLOPS
+CG: Convergence at 511 iterations, L2 relative residual: iterated = 9.815920e-09, true = 9.815920e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.079 secs, Performance = 264.843 GFLOPS
+Processing configurations:  22%|██▏       | 11/50 [00:08<00:30,  1.29it/s]CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.990178e-09, true = 9.990178e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 228.905 GFLOPS
+CG: Convergence at 501 iterations, L2 relative residual: iterated = 9.859944e-09, true = 9.859944e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.099 secs, Performance = 206.199 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.838197e-09, true = 9.838197e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.077 secs, Performance = 263.334 GFLOPS
+Processing configurations:  24%|██▍       | 12/50 [00:08<00:26,  1.42it/s]CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.767249e-09, true = 9.767249e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 226.703 GFLOPS
+CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.948286e-09, true = 9.948286e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.104 secs, Performance = 195.884 GFLOPS
+CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.766476e-09, true = 9.766476e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.090 secs, Performance = 227.543 GFLOPS
+Processing configurations:  26%|██▌       | 13/50 [00:09<00:26,  1.38it/s]CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.955574e-09, true = 9.955574e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.086 secs, Performance = 235.386 GFLOPS
+CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.842235e-09, true = 9.842235e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 231.228 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.754273e-09, true = 9.754273e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.103 secs, Performance = 197.574 GFLOPS
+Processing configurations:  28%|██▊       | 14/50 [00:10<00:26,  1.36it/s]CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.765624e-09, true = 9.765624e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 228.950 GFLOPS
+CG: Convergence at 495 iterations, L2 relative residual: iterated = 9.942348e-09, true = 9.942348e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 233.813 GFLOPS
+CG: Convergence at 502 iterations, L2 relative residual: iterated = 9.931508e-09, true = 9.931508e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.100 secs, Performance = 205.857 GFLOPS
+Processing configurations:  30%|███       | 15/50 [00:10<00:25,  1.38it/s]CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.918664e-09, true = 9.918664e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.159 secs, Performance = 128.444 GFLOPS
+CG: Convergence at 500 iterations, L2 relative residual: iterated = 9.908479e-09, true = 9.908479e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 230.052 GFLOPS
+CG: Convergence at 500 iterations, L2 relative residual: iterated = 9.722123e-09, true = 9.722123e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.092 secs, Performance = 223.009 GFLOPS
+Processing configurations:  32%|███▏      | 16/50 [00:11<00:24,  1.42it/s]CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.939101e-09, true = 9.939101e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 229.976 GFLOPS
+CG: Convergence at 501 iterations, L2 relative residual: iterated = 9.861553e-09, true = 9.861553e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.092 secs, Performance = 223.824 GFLOPS
+CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.912282e-09, true = 9.912282e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.099 secs, Performance = 206.626 GFLOPS
+Processing configurations:  34%|███▍      | 17/50 [00:12<00:23,  1.43it/s]CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.895783e-09, true = 9.895783e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.073 secs, Performance = 276.403 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.901370e-09, true = 9.901370e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 231.571 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.861628e-09, true = 9.861628e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 228.594 GFLOPS
+Processing configurations:  36%|███▌      | 18/50 [00:12<00:22,  1.45it/s]CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.990797e-09, true = 9.990797e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.093 secs, Performance = 219.221 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.729591e-09, true = 9.729591e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.077 secs, Performance = 265.682 GFLOPS
+CG: Convergence at 500 iterations, L2 relative residual: iterated = 9.653931e-09, true = 9.653931e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 232.184 GFLOPS
+Processing configurations:  38%|███▊      | 19/50 [00:13<00:20,  1.49it/s]CG: Convergence at 501 iterations, L2 relative residual: iterated = 9.694577e-09, true = 9.694577e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.103 secs, Performance = 198.344 GFLOPS
+CG: Convergence at 502 iterations, L2 relative residual: iterated = 9.902671e-09, true = 9.902671e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.078 secs, Performance = 264.693 GFLOPS
+CG: Convergence at 502 iterations, L2 relative residual: iterated = 9.898789e-09, true = 9.898789e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.182 secs, Performance = 112.962 GFLOPS
+Processing configurations:  40%|████      | 20/50 [00:14<00:20,  1.46it/s]CG: Convergence at 496 iterations, L2 relative residual: iterated = 9.732804e-09, true = 9.732804e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 229.859 GFLOPS
+CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.694882e-09, true = 9.694882e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 231.553 GFLOPS
+CG: Convergence at 490 iterations, L2 relative residual: iterated = 9.963891e-09, true = 9.963891e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.098 secs, Performance = 205.507 GFLOPS
+Processing configurations:  42%|████▏     | 21/50 [00:14<00:19,  1.49it/s]CG: Convergence at 487 iterations, L2 relative residual: iterated = 9.963337e-09, true = 9.963337e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.072 secs, Performance = 276.366 GFLOPS
+CG: Convergence at 502 iterations, L2 relative residual: iterated = 9.813957e-09, true = 9.813957e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 230.247 GFLOPS
+CG: Convergence at 495 iterations, L2 relative residual: iterated = 9.885043e-09, true = 9.885043e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 230.897 GFLOPS
+Processing configurations:  44%|████▍     | 22/50 [00:15<00:18,  1.55it/s]CG: Convergence at 502 iterations, L2 relative residual: iterated = 9.963633e-09, true = 9.963633e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.097 secs, Performance = 212.457 GFLOPS
+CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.765926e-09, true = 9.765926e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 232.381 GFLOPS
+CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.728625e-09, true = 9.728625e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.091 secs, Performance = 222.846 GFLOPS
+Processing configurations:  46%|████▌     | 23/50 [00:16<00:17,  1.56it/s]CG: Convergence at 503 iterations, L2 relative residual: iterated = 9.950271e-09, true = 9.950271e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.105 secs, Performance = 196.205 GFLOPS
+CG: Convergence at 500 iterations, L2 relative residual: iterated = 9.704683e-09, true = 9.704683e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.103 secs, Performance = 197.987 GFLOPS
+CG: Convergence at 500 iterations, L2 relative residual: iterated = 9.712257e-09, true = 9.712257e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.080 secs, Performance = 255.411 GFLOPS
+Processing configurations:  48%|████▊     | 24/50 [00:16<00:16,  1.56it/s]CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.929929e-09, true = 9.929929e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.211 secs, Performance = 96.405 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.758989e-09, true = 9.758989e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 228.489 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.676383e-09, true = 9.676383e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.091 secs, Performance = 223.743 GFLOPS
+Processing configurations:  50%|█████     | 25/50 [00:17<00:16,  1.55it/s]CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.763701e-09, true = 9.763701e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 230.642 GFLOPS
+CG: Convergence at 485 iterations, L2 relative residual: iterated = 9.777917e-09, true = 9.777917e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.094 secs, Performance = 210.273 GFLOPS
+CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.885838e-09, true = 9.885838e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.106 secs, Performance = 190.063 GFLOPS
+Processing configurations:  52%|█████▏    | 26/50 [00:18<00:16,  1.48it/s]CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.885439e-09, true = 9.885439e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 229.634 GFLOPS
+CG: Convergence at 495 iterations, L2 relative residual: iterated = 9.864340e-09, true = 9.864340e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 231.152 GFLOPS
+CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.945386e-09, true = 9.945386e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 232.928 GFLOPS
+Processing configurations:  54%|█████▍    | 27/50 [00:18<00:15,  1.45it/s]CG: Convergence at 489 iterations, L2 relative residual: iterated = 9.867509e-09, true = 9.867509e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 228.940 GFLOPS
+CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.935833e-09, true = 9.935833e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 229.953 GFLOPS
+CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.915815e-09, true = 9.915815e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 230.487 GFLOPS
+Processing configurations:  56%|█████▌    | 28/50 [00:19<00:15,  1.41it/s]CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.821472e-09, true = 9.821472e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.180 secs, Performance = 113.221 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.800625e-09, true = 9.800625e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.080 secs, Performance = 255.575 GFLOPS
+CG: Convergence at 504 iterations, L2 relative residual: iterated = 9.715317e-09, true = 9.715317e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.105 secs, Performance = 196.910 GFLOPS
+Processing configurations:  58%|█████▊    | 29/50 [00:20<00:15,  1.33it/s]CG: Convergence at 496 iterations, L2 relative residual: iterated = 9.725904e-09, true = 9.725904e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.102 secs, Performance = 198.810 GFLOPS
+CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.660556e-09, true = 9.660556e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.103 secs, Performance = 197.658 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.777726e-09, true = 9.777726e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.077 secs, Performance = 265.641 GFLOPS
+Processing configurations:  60%|██████    | 30/50 [00:21<00:15,  1.28it/s]CG: Convergence at 502 iterations, L2 relative residual: iterated = 9.816507e-09, true = 9.816507e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.101 secs, Performance = 203.743 GFLOPS
+CG: Convergence at 502 iterations, L2 relative residual: iterated = 9.901986e-09, true = 9.901986e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.101 secs, Performance = 202.482 GFLOPS
+CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.814768e-09, true = 9.814768e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.077 secs, Performance = 265.129 GFLOPS
+Processing configurations:  62%|██████▏   | 31/50 [00:22<00:14,  1.28it/s]CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.703554e-09, true = 9.703554e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 230.461 GFLOPS
+CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.876949e-09, true = 9.876949e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.077 secs, Performance = 265.675 GFLOPS
+CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.773805e-09, true = 9.773805e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.092 secs, Performance = 219.419 GFLOPS
+Processing configurations:  64%|██████▍   | 32/50 [00:22<00:13,  1.31it/s]CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.871862e-09, true = 9.871862e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.162 secs, Performance = 125.947 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.730444e-09, true = 9.730444e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.090 secs, Performance = 226.457 GFLOPS
+CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.824019e-09, true = 9.824019e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.102 secs, Performance = 200.362 GFLOPS
+Processing configurations:  66%|██████▌   | 33/50 [00:23<00:12,  1.34it/s]CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.668742e-09, true = 9.668742e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.099 secs, Performance = 204.020 GFLOPS
+CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.742009e-09, true = 9.742009e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.103 secs, Performance = 196.095 GFLOPS
+CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.856666e-09, true = 9.856666e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.093 secs, Performance = 217.166 GFLOPS
+Processing configurations:  68%|██████▊   | 34/50 [00:24<00:11,  1.34it/s]CG: Convergence at 486 iterations, L2 relative residual: iterated = 9.781140e-09, true = 9.781140e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 222.822 GFLOPS
+CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.806956e-09, true = 9.806956e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.091 secs, Performance = 221.619 GFLOPS
+CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.812159e-09, true = 9.812159e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.093 secs, Performance = 216.667 GFLOPS
+Processing configurations:  70%|███████   | 35/50 [00:25<00:11,  1.34it/s]CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.616623e-09, true = 9.616623e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 232.985 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.768911e-09, true = 9.768911e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 230.746 GFLOPS
+CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.671167e-09, true = 9.671167e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.076 secs, Performance = 265.362 GFLOPS
+Processing configurations:  72%|███████▏  | 36/50 [00:25<00:09,  1.43it/s]CG: Convergence at 487 iterations, L2 relative residual: iterated = 9.740874e-09, true = 9.740874e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 224.892 GFLOPS
+CG: Convergence at 487 iterations, L2 relative residual: iterated = 9.575523e-09, true = 9.575523e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.080 secs, Performance = 248.933 GFLOPS
+CG: Convergence at 496 iterations, L2 relative residual: iterated = 9.785617e-09, true = 9.785617e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.180 secs, Performance = 112.661 GFLOPS
+Processing configurations:  74%|███████▍  | 37/50 [00:26<00:09,  1.34it/s]CG: Convergence at 489 iterations, L2 relative residual: iterated = 9.871304e-09, true = 9.871304e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.075 secs, Performance = 265.888 GFLOPS
+CG: Convergence at 490 iterations, L2 relative residual: iterated = 9.936767e-09, true = 9.936767e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 231.348 GFLOPS
+CG: Convergence at 488 iterations, L2 relative residual: iterated = 9.809371e-09, true = 9.809371e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.074 secs, Performance = 268.712 GFLOPS
+Processing configurations:  76%|███████▌  | 38/50 [00:27<00:08,  1.40it/s]CG: Convergence at 490 iterations, L2 relative residual: iterated = 9.690468e-09, true = 9.690468e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 229.977 GFLOPS
+CG: Convergence at 489 iterations, L2 relative residual: iterated = 9.953108e-09, true = 9.953108e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.123 secs, Performance = 163.034 GFLOPS
+CG: Convergence at 487 iterations, L2 relative residual: iterated = 9.988252e-09, true = 9.988252e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.086 secs, Performance = 232.128 GFLOPS
+Processing configurations:  78%|███████▊  | 39/50 [00:27<00:07,  1.45it/s]CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.897691e-09, true = 9.897691e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.091 secs, Performance = 222.729 GFLOPS
+CG: Convergence at 489 iterations, L2 relative residual: iterated = 9.943334e-09, true = 9.943334e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.097 secs, Performance = 206.629 GFLOPS
+CG: Convergence at 495 iterations, L2 relative residual: iterated = 9.658290e-09, true = 9.658290e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.093 secs, Performance = 219.008 GFLOPS
+Processing configurations:  80%|████████  | 40/50 [00:28<00:06,  1.45it/s]CG: Convergence at 496 iterations, L2 relative residual: iterated = 9.852182e-09, true = 9.852182e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 231.504 GFLOPS
+CG: Convergence at 496 iterations, L2 relative residual: iterated = 9.964320e-09, true = 9.964320e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.099 secs, Performance = 206.093 GFLOPS
+CG: Convergence at 497 iterations, L2 relative residual: iterated = 9.993130e-09, true = 9.993130e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.099 secs, Performance = 205.346 GFLOPS
+Processing configurations:  82%|████████▏ | 41/50 [00:29<00:06,  1.41it/s]CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.767344e-09, true = 9.767344e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.084 secs, Performance = 239.270 GFLOPS
+CG: Convergence at 489 iterations, L2 relative residual: iterated = 9.797777e-09, true = 9.797777e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.103 secs, Performance = 194.031 GFLOPS
+CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.917151e-09, true = 9.917151e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.074 secs, Performance = 276.319 GFLOPS
+Processing configurations:  84%|████████▍ | 42/50 [00:29<00:05,  1.49it/s]CG: Convergence at 489 iterations, L2 relative residual: iterated = 9.998944e-09, true = 9.998944e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.097 secs, Performance = 205.966 GFLOPS
+CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.760495e-09, true = 9.760495e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.101 secs, Performance = 200.958 GFLOPS
+CG: Convergence at 495 iterations, L2 relative residual: iterated = 9.963183e-09, true = 9.963183e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.089 secs, Performance = 227.221 GFLOPS
+Processing configurations:  86%|████████▌ | 43/50 [00:30<00:04,  1.41it/s]CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.904979e-09, true = 9.904979e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 231.654 GFLOPS
+CG: Convergence at 501 iterations, L2 relative residual: iterated = 9.778286e-09, true = 9.778286e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.100 secs, Performance = 205.032 GFLOPS
+CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.795947e-09, true = 9.795947e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.103 secs, Performance = 197.564 GFLOPS
+Processing configurations:  88%|████████▊ | 44/50 [00:31<00:04,  1.40it/s]CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.698934e-09, true = 9.698934e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 229.819 GFLOPS
+CG: Convergence at 499 iterations, L2 relative residual: iterated = 9.956744e-09, true = 9.956744e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.090 secs, Performance = 227.583 GFLOPS
+CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.986262e-09, true = 9.986262e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.087 secs, Performance = 230.780 GFLOPS
+Processing configurations:  90%|█████████ | 45/50 [00:32<00:03,  1.38it/s]CG: Convergence at 500 iterations, L2 relative residual: iterated = 9.716422e-09, true = 9.716422e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.101 secs, Performance = 203.373 GFLOPS
+CG: Convergence at 496 iterations, L2 relative residual: iterated = 9.949749e-09, true = 9.949749e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.158 secs, Performance = 128.228 GFLOPS
+CG: Convergence at 502 iterations, L2 relative residual: iterated = 9.690371e-09, true = 9.690371e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.093 secs, Performance = 221.817 GFLOPS
+Processing configurations:  92%|█████████▏| 46/50 [00:32<00:02,  1.41it/s]CG: Convergence at 492 iterations, L2 relative residual: iterated = 9.882527e-09, true = 9.882527e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 230.134 GFLOPS
+CG: Convergence at 493 iterations, L2 relative residual: iterated = 9.986124e-09, true = 9.986124e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.076 secs, Performance = 264.357 GFLOPS
+CG: Convergence at 495 iterations, L2 relative residual: iterated = 9.987478e-09, true = 9.987478e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.105 secs, Performance = 193.581 GFLOPS
+Processing configurations:  94%|█████████▍| 47/50 [00:33<00:02,  1.43it/s]CG: Convergence at 488 iterations, L2 relative residual: iterated = 9.823719e-09, true = 9.823719e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.107 secs, Performance = 187.388 GFLOPS
+CG: Convergence at 489 iterations, L2 relative residual: iterated = 9.867061e-09, true = 9.867061e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.102 secs, Performance = 196.614 GFLOPS
+CG: Convergence at 485 iterations, L2 relative residual: iterated = 9.815177e-09, true = 9.815177e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.086 secs, Performance = 230.156 GFLOPS
+Processing configurations:  96%|█████████▌| 48/50 [00:34<00:01,  1.46it/s]CG: Convergence at 498 iterations, L2 relative residual: iterated = 9.689268e-09, true = 9.689268e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.088 secs, Performance = 230.691 GFLOPS
+CG: Convergence at 494 iterations, L2 relative residual: iterated = 9.718391e-09, true = 9.718391e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.103 secs, Performance = 196.299 GFLOPS
+CG: Convergence at 504 iterations, L2 relative residual: iterated = 9.761989e-09, true = 9.761989e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.102 secs, Performance = 202.550 GFLOPS
+Processing configurations:  98%|█████████▊| 49/50 [00:34<00:00,  1.49it/s]CG: Convergence at 479 iterations, L2 relative residual: iterated = 9.917864e-09, true = 9.917864e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.079 secs, Performance = 248.350 GFLOPS
+CG: Convergence at 486 iterations, L2 relative residual: iterated = 9.694374e-09, true = 9.694374e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.096 secs, Performance = 206.591 GFLOPS
+CG: Convergence at 486 iterations, L2 relative residual: iterated = 9.957224e-09, true = 9.957224e-09 (requested = 1.000000e-08)
+PyQUDA INFO: Time = 0.080 secs, Performance = 248.939 GFLOPS
+Processing configurations: 100%|██████████| 50/50 [00:35<00:00,  1.47it/s]Processing configurations: 100%|██████████| 50/50 [00:35<00:00,  1.41it/s]
+/home/jinchen/miniconda3/envs/pygpt/lib/python3.8/site-packages/matplotlib/axes/_base.py:2503: UserWarning: Warning: converting a masked element to nan.
+  xys = np.asarray(xys)
+Median p4 relative spread over shells: As=6.787e-01, Bm=2.990e+00
+  (2, 2, 2) |k|=1.2247 M_paper=+0.1371 +/- 0.0387
+  (4, 4, 4) |k|=1.7321 M_paper=+0.0846 +/- 0.0256
+  (6, 6, 6) |k|=1.2247 M_paper=+0.0665 +/- 0.0323
+Wrote /home/jinchen/git/anl/IPG4Lattice/artifacts/data/qprop_dressing_staggered_S16T16_cg_ipg.npz
+Wrote /home/jinchen/git/anl/IPG4Lattice/artifacts/plots/qprop_dressing_staggered_S16T16_cg_ipg_As.pdf
+Wrote /home/jinchen/git/anl/IPG4Lattice/artifacts/plots/qprop_dressing_staggered_S16T16_cg_ipg_Bm.pdf
+Wrote /home/jinchen/git/anl/IPG4Lattice/artifacts/plots/qprop_dressing_staggered_S16T16_cg_ipg_M.pdf
+Wrote /home/jinchen/git/anl/IPG4Lattice/artifacts/plots/qprop_dressing_staggered_S16T16_cg_ipg_p4_panels.pdf
+WARNING: Environment variable QUDA_PROFILE_OUTPUT_BASE not set; writing to profile.tsv and profile_async.tsv
+Saving 42 sets of cached parameters to /home/jinchen/git/anl/IPG4Lattice/.cache/profile_0.tsv
+Saving 0 sets of cached profiles to /home/jinchen/git/anl/IPG4Lattice/.cache/profile_async_0.tsv
+
+               initQuda Total time =     0.108 secs
+                     init     =     0.108 secs ( 99.981%),	 with        2 calls at 5.422e+04 us per call
+        total accounted       =     0.108 secs ( 99.981%)
+        total missing         =     0.000 secs (  0.019%)
+
+          loadGaugeQuda Total time =     0.313 secs
+                 download     =     0.308 secs ( 98.482%),	 with       50 calls at 6.168e+03 us per call
+                     init     =     0.000 secs (  0.093%),	 with      300 calls at 9.700e-01 us per call
+                  compute     =     0.002 secs (  0.652%),	 with      100 calls at 2.043e+01 us per call
+        total accounted       =     0.311 secs ( 99.228%)
+        total missing         =     0.002 secs (  0.772%)
+
+     invertMultiSrcQuda Total time =    14.566 secs
+                     init     =     0.058 secs (  0.400%),	 with     5402 calls at 1.078e+01 us per call
+                 preamble     =     0.112 secs (  0.771%),	 with      600 calls at 1.871e+02 us per call
+                  compute     =    14.285 secs ( 98.071%),	 with      152 calls at 9.398e+04 us per call
+                 epilogue     =     0.075 secs (  0.517%),	 with      300 calls at 2.508e+02 us per call
+                     free     =     0.001 secs (  0.006%),	 with     1650 calls at 5.527e-01 us per call
+        total accounted       =    14.531 secs ( 99.764%)
+        total missing         =     0.034 secs (  0.236%)
+
+     staggeredPhaseQuda Total time =     0.736 secs
+                 download     =     0.410 secs ( 55.686%),	 with       50 calls at 8.202e+03 us per call
+                   upload     =     0.321 secs ( 43.556%),	 with       50 calls at 6.416e+03 us per call
+                     init     =     0.000 secs (  0.057%),	 with      250 calls at 1.692e+00 us per call
+                  compute     =     0.001 secs (  0.157%),	 with       50 calls at 2.306e+01 us per call
+                     free     =     0.000 secs (  0.004%),	 with       50 calls at 5.800e-01 us per call
+        total accounted       =     0.732 secs ( 99.459%)
+        total missing         =     0.004 secs (  0.541%)
+
+                endQuda Total time =     0.008 secs
+                     free     =     0.000 secs (  0.024%),	 with        2 calls at 1.000e+00 us per call
+        total accounted       =     0.000 secs (  0.024%)
+        total missing         =     0.008 secs ( 99.976%)
+
+       initQuda-endQuda Total time =    37.235 secs
+
+                   QUDA Total time =    15.732 secs
+                 download     =     0.719 secs (  4.567%),	 with      100 calls at 7.185e+03 us per call
+                   upload     =     0.321 secs (  2.039%),	 with       50 calls at 6.416e+03 us per call
+                     init     =     0.167 secs (  1.064%),	 with     5954 calls at 2.812e+01 us per call
+                 preamble     =     0.112 secs (  0.714%),	 with      600 calls at 1.871e+02 us per call
+                  compute     =    14.288 secs ( 90.820%),	 with      302 calls at 4.731e+04 us per call
+                 epilogue     =     0.075 secs (  0.478%),	 with      300 calls at 2.507e+02 us per call
+                     free     =     0.001 secs (  0.006%),	 with     1702 calls at 5.470e-01 us per call
+        total accounted       =    15.683 secs ( 99.688%)
+        total missing         =     0.049 secs (  0.312%)
+
+Device memory used = 123.9 MiB
+Pinned device memory used = 0.0 MiB
+Managed memory used = 0.0 MiB
+Shmem memory used = 0.0 MiB
+Page-locked host memory used = 9.0 MiB
+Total host memory used >= 9.1 MiB
+
