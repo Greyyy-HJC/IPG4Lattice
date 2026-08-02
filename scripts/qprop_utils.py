@@ -515,6 +515,12 @@ def gauge_path(ensemble: str, cfg: int) -> str:
         return os.path.join(ROOT, f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
     if ensemble == "S16T16_cg_ipg":
         return os.path.join(ROOT, f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+    if ensemble == "S16T16_itpg_0.5":
+        return os.path.join(ROOT, f"ensemble/S16T16_itpg/wilson_b6.itpg.eps0p5.{cfg}")
+    if ensemble == "S16T16_itpg_0.3":
+        return os.path.join(ROOT, f"ensemble/S16T16_itpg/wilson_b6.itpg.eps0p3.{cfg}")
+    if ensemble == "S16T16_itpg_0.1":
+        return os.path.join(ROOT, f"ensemble/S16T16_itpg/wilson_b6.itpg.eps0p1.{cfg}")
     if ensemble == "S24T24_cg_ipg":
         return os.path.join(ROOT, f"ensemble/S24T24_cg_ipg/gauge/wilson_b6.cg.ipg.1e-14.{cfg}")
     if ensemble == "S32T32_cg_ipg":
@@ -523,7 +529,7 @@ def gauge_path(ensemble: str, cfg: int) -> str:
 
 
 def lattice_size_for_ensemble(ensemble: str) -> list[int]:
-    if ensemble in {"S16T16", "S16T16_cg", "S16T16_cg_ipg"}:
+    if ensemble in {"S16T16", "S16T16_cg", "S16T16_cg_ipg", "S16T16_itpg_0.5", "S16T16_itpg_0.3", "S16T16_itpg_0.1"}:
         return [16, 16, 16, 16]
     if ensemble == "S24T24_cg_ipg":
         return [24, 24, 24, 24]

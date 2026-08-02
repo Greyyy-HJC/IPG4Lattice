@@ -19,7 +19,7 @@ if not os.path.exists(".cache"):
     print("Created .cache directory for PyQUDA resources")
 
 
-ensemble = "S16T16_cg_ipg"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S32T32_cg_ipg"
+ensemble = "S16T16_itpg_0.3"  # "S16T16", "S16T16_cg", "S16T16_cg_ipg", "S32T32_cg_ipg"
 
 
 init([1, 1, 1, 1], resource_path=".cache")
@@ -52,6 +52,12 @@ for cfg in tqdm(range(N_conf), desc="Processing configurations", disable=not is_
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg/gauge/wilson_b6.cg.1e-08.{cfg}")
     elif ensemble == "S16T16_cg_ipg":
         gauge = io.readNERSCGauge(f"ensemble/S16T16_cg_ipg/gauge/wilson_b6.cg.ipg.1e-08.{cfg}")
+    elif ensemble == "S16T16_itpg_0.5":
+        gauge = io.readNERSCGauge(f"ensemble/S16T16_itpg/wilson_b6.itpg.eps0p5.{cfg}")
+    elif ensemble == "S16T16_itpg_0.3":
+        gauge = io.readNERSCGauge(f"ensemble/S16T16_itpg/wilson_b6.itpg.eps0p3.{cfg}")
+    elif ensemble == "S16T16_itpg_0.1":
+        gauge = io.readNERSCGauge(f"ensemble/S16T16_itpg/wilson_b6.itpg.eps0p1.{cfg}")
     elif ensemble == "S32T32_cg_ipg":
         gauge = io.readNERSCGauge(f"ensemble/S32T32_cg_ipg/gauge/wilson_b5_95_fixed.{cfg}.ipg")
 

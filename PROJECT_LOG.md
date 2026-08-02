@@ -66,3 +66,7 @@ Append-only development history for `IPG4Lattice`.
 - Refactored [`scripts/qprop_mom.py`](scripts/qprop_mom.py) to **staggered** fermion (`getStaggered`, `staggered_wall_corr_t_by_gamma` in [`scripts/qprop_utils.py`](scripts/qprop_utils.py)); spatial momenta `(0,0,0)`, `(2,2,2)`, `(3,3,3)`, `(4,4,4)` on `S24T24_cg_ipg`.
 - Fixed 12-point coefficient/M diagnostic grid in `qprop_utils`: `COEFFICIENT_PLOT_SPATIAL × COEFFICIENT_PLOT_PT` with shell-orbit matching (negative lattice reps); added [`plot_M_vs_momentum`](scripts/qprop_utils.py) → `artifacts/plots/qprop_M_{ensemble}_M.pdf`.
 - Added [`scripts/qprop_dispersion_check.py`](scripts/qprop_dispersion_check.py): compares `E_eff` from `qprop_mom` with `√(M²+|k|²)` from `qprop_M` caches (PDF only).
+
+## 2026-05-31
+
+- Added [`interp_gauge/gfix_S16T16_itpg.sh`](interp_gauge/gfix_S16T16_itpg.sh) to run interpolating gauge fixing on numeric `ensemble/S16T16/wilson_b6.<n>` inputs for `GF_EPSILON = 0.5, 0.3, 0.1`, writing distinct outputs under `ensemble/S16T16_itpg`.

@@ -36,7 +36,7 @@ from scripts.qprop_utils import (
 )
 
 # --- run parameters ---
-ensemble = "S24T24_cg_ipg"
+ensemble = "S16T16_cg_ipg"
 N_conf = 50
 mass = -0.038888
 tol = 1e-8

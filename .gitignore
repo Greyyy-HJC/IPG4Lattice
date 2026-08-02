@@ -15,3 +15,5 @@ scripts/.cache/
 scripts/__pycache__/
 
 artifacts/data/
+
+GLU/
